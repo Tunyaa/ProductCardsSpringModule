@@ -10,6 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -46,7 +47,7 @@ public class Product {
     private BigDecimal currentPrice; // Последняя цена покупки данного товара
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private ArrayList<PriceHistory> priceHistory = new ArrayList<>(); // Список изменения цены на конкретный продукт
+    private List<PriceHistory> priceHistory = new ArrayList<>(); // Список изменения цены на конкретный продукт
 
     // Метод для обновления цены и сохранением старой цены в историю
     private void updatePrice(BigDecimal newPrice) {
@@ -54,4 +55,101 @@ public class Product {
 
         currentPrice = newPrice; // Ставим актуальную цену на продукт
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVariety() {
+        return variety;
+    }
+
+    public void setVariety(String variety) {
+        this.variety = variety;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getPacking() {
+        return packing;
+    }
+
+    public void setPacking(String packing) {
+        this.packing = packing;
+    }
+
+    public String getWhereBuy() {
+        return whereBuy;
+    }
+
+    public void setWhereBuy(String whereBuy) {
+        this.whereBuy = whereBuy;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getСountry() {
+        return сountry;
+    }
+
+    public void setСountry(String сountry) {
+        this.сountry = сountry;
+    }
+
+    public String getSeasonality() {
+        return seasonality;
+    }
+
+    public void setSeasonality(String seasonality) {
+        this.seasonality = seasonality;
+    }
+
+    public BigDecimal getCurrentPrice() {
+        return currentPrice;
+    }
+
+    public void setCurrentPrice(BigDecimal currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
+    public List<PriceHistory> getPriceHistory() {
+        return priceHistory;
+    }
+
+    public void setPriceHistory(List<PriceHistory> priceHistory) {
+        this.priceHistory = priceHistory;
+    }
+
 }
