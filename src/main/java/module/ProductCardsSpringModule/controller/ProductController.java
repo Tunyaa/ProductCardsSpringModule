@@ -22,13 +22,13 @@ public class ProductController {
         this.productRepository = productRepository;
     }
 
-    @GetMapping("/products")
-    public String showProducts(Model model) {
-        List<Product> products = productRepository.findAll();
-        model.addAttribute("products", products);
-
-        return "products";
-    }
+//    @GetMapping("/products")
+//    public String showProducts(Model model) {
+//        List<Product> products = productRepository.findAll();
+//        model.addAttribute("products", products);
+//
+//        return "products";
+//    }
 
     @GetMapping("/productsmob")
     public String showProductsMob(Model model) {

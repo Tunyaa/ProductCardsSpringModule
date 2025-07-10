@@ -53,6 +53,10 @@
     <body>
         <div class="container mt-3">
             <h1 class="h4 mb-3">Список продуктов</h1>
+            <span >
+                <a href="/addproduct">Добавить продукт</a>
+            </span>
+            
 
             <!-- Десктопная версия (таблица) -->
             <div class="table-responsive">
@@ -64,7 +68,8 @@
                             <th>Сорт</th>
                             <th>Категория</th>
                             <th>Цена</th>
-                            <th>Действия</th>
+                            <th>Фасовка</th>
+                            <th>Где купить</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,10 +85,8 @@
                             <td th:text="${product.variety} ?: '-'"></td>
                             <td th:text="${product.category}"></td>
                             <td class="price-cell" th:text="${#numbers.formatDecimal(product.currentPrice, 1, 2)} + ' ₽'"></td>
-                            <td>
-                                <a th:href="@{/products/{id}(id=${product.id})}" 
-                                   class="btn btn-info btn-sm action-btn">Подробнее</a>
-                            </td>
+                            <td th:text="${product.packing}"></td>
+                            <td th:text="${product.whereBuy}"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -97,30 +100,32 @@
                             <div class="row g-0">
                                 <div class="col-3">
                                     <img th:if="${product.img != null}" 
-                                     th:src="@{'/' + ${product.img}}" 
-                                     alt="Фото продукта" 
-                                     class="img-fluid p-2 product-img">
-                                <span th:unless="${product.img != null}">Нет фото</span>
-                                    
-                                        <i class="bi bi-image" style="font-size: 2rem;"></i>
-                                    </div>
+                                         th:src="@{'/' + ${product.img}}" 
+                                         alt="Фото продукта" 
+                                         class="img-fluid p-2 product-img">
+                                    <span th:unless="${product.img != null}">Нет фото</span>
+
+                                    <i class="bi bi-image" style="font-size: 2rem;"></i>
                                 </div>
-                                <div class="col-9">
-                                    <div class="product-info">
-                                        <h5 class="h6 mb-1" th:text="${product.name}"></h5>
-                                        <div class="d-flex flex-wrap mb-1">
-                                            <span class="badge bg-primary badge-custom" 
-                                                  th:text="${product.category}"></span>
-                                            <span class="badge bg-secondary badge-custom" 
-                                                  th:if="${product.variety}" 
-                                                  th:text="${product.variety}"></span>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="price-cell" 
-                                                  th:text="${#numbers.formatDecimal(product.currentPrice, 1, 2)} + ' ₽'"></span>
-                                            <a th:href="@{/products/{id}(id=${product.id})}" 
-                                               class="btn btn-info btn-sm action-btn">Подробнее</a>
-                                        </div>
+                            </div>
+                            <div class="col-9">
+                                <div class="product-info">
+                                    <h5 class="h6 mb-1" th:text="${product.name}"></h5>
+                                    <div class="d-flex flex-wrap mb-1">
+                                        <span class="badge bg-primary badge-custom" 
+                                              th:text="${product.category}"></span>
+                                        <span class="badge bg-secondary badge-custom" 
+                                              th:if="${product.variety}" 
+                                              th:text="${product.variety}"></span>
+                                        <span class="badge bg-primary badge-custom" 
+                                              th:text="${product.packing}"></span>
+                                        <span class="badge bg-secondary badge-custom" 
+                                              th:text="${product.whereBuy}"></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="price-cell" 
+                                              th:text="${#numbers.formatDecimal(product.currentPrice, 1, 2)} + ' ₽'"></span>
+
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +134,8 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
