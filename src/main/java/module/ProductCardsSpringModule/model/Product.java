@@ -39,7 +39,7 @@ public class Product {
 
     private String category; // Категория товара (Овощ, фрукт, зелень, орехи...)
 
-    private String сountry; // Страна производитель
+    private String country; // Страна производитель
 
     private String seasonality; // Сезонность(Июль - Сентябрь, Октябрь - Февраль)
 
@@ -120,12 +120,12 @@ public class Product {
         this.category = category;
     }
 
-    public String getСountry() {
-        return сountry;
+    public String getCountry() {
+        return country;
     }
 
-    public void setСountry(String сountry) {
-        this.сountry = сountry;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getSeasonality() {

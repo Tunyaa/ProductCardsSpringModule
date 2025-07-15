@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author tunyaa
  */
 @Controller
-@RequestMapping("/product")
 public class ProductController {
 
     private final ProductRepository productRepository;
@@ -22,19 +21,11 @@ public class ProductController {
         this.productRepository = productRepository;
     }
 
-//    @GetMapping("/products")
-//    public String showProducts(Model model) {
-//        List<Product> products = productRepository.findAll();
-//        model.addAttribute("products", products);
-//
-//        return "products";
-//    }
-
-    @GetMapping("/productsmob")
+    @GetMapping("/products")
     public String showProductsMob(Model model) {
         List<Product> products = productRepository.findAll();
         model.addAttribute("products", products);
 
-        return "productsmob";
+        return "products";
     }
 }
