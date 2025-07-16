@@ -27,7 +27,7 @@ public class Product {
     @Column(nullable = false)
     private String name; // Общее название продукта (Черешня, Киви, Морковь...)
 
-    private String variety; // Сорт (Черный Аватар, Гренни Смит, Персик плоский...)
+    private String variety; // Сорт (Черный Аватар, Гренни Смит...)
 
     private String img; //Фотография продукта(ссылка на файл в папке)
 

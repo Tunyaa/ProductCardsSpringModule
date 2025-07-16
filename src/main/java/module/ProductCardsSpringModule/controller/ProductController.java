@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import module.ProductCardsSpringModule.model.Product;
+import module.ProductCardsSpringModule.model.ProductCategories;
 import module.ProductCardsSpringModule.repository.ProductRepository;
 import module.ProductCardsSpringModule.service.ImageService;
 import org.springframework.stereotype.Controller;
@@ -32,103 +33,109 @@ public class ProductController {
         this.imageService = imageService;
     }
 
+    // Показать все продукты
     @GetMapping("/products")
-    public String showProductsMob(Model model) {
+    public String showProducts(Model model) {
+
         List<Product> products = productRepository.findAll();
         model.addAttribute("products", products);
 
         return "products";
     }
 
-    // Отображение формы
+    // Отображение формы добавления нового продукта
     @GetMapping("/addproduct")
     public String showAddProductForm(Model model) {
+
+        // Передаём продукт, который принимает шаблон, заполняет его поля 
+        // и передаёт этот объект далее в post addProduct()
         model.addAttribute("product", new Product());
 
-        List<String> categories = Arrays.asList("Овощи", "Фрукты", "Ягоды", "Орехи", "Сухофрукты", "Зелень", "Экзотика", "Грибы");
-
+        // Передаём в ышаблон -> в форму -> в поле выбора категории список категорий
+        List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);
 
         return "addproduct";
     }
 
-    // Обработка отправки формы
+    // Обработка формы добавления продукта
     @PostMapping("/addproduct")
     public String addProduct(
+            // Принимаем из шаблона объект продукт
             @ModelAttribute("product") Product product,
+            // Принимаем из шаблона объект картинку(необязательный параметр)
             @RequestParam(name = "imageFile", required = false) MultipartFile imageFile,
             Model model) throws IOException {
 
         // Сохраняем изображение, если оно было загружено
         if (!imageFile.isEmpty()) {
-
+            // Изображение копируется по url
             String fileName = imageService.saveImage(imageFile);
+            // url сохраняется в поле продукта
             product.setImg("images/" + fileName);
         }
 
-        if (product.getName().equals("")) {
-            model.addAttribute("message", "Название продукта не введено!");
-            return "addproduct";
-        }
+        // Сохраняем продукт
         Product save = productRepository.save(product);
-        // Добавляем сообщение об 
 
+        // Добавляем сообщение об добавлении продукта
         model.addAttribute("message", "Продукт успешно добавлен!");
 
         // Возвращаем ту же форму с сообщением
         model.addAttribute("product", new Product());
+
         return "addproduct";
     }
 
+    // Отображение формы изменения продукта
     @GetMapping("/setproduct")
-    public String showSetProductForm(@RequestParam Long id, Model model) throws IOException {
+    public String showSetProductForm(
+            // Принимаем параметр id, который передаётся из шаблона "/products" из формы изменения
+            @RequestParam Long id, Model model) throws IOException {
 
+        // Получаем продукт по id и передаём в шаблон
         Product product = productRepository.findById(id).orElseThrow();
         model.addAttribute("product", product);
-        List<String> categories = Arrays.asList("Овощи", "Фрукты", "Ягоды", "Орехи", "Сухофрукты", "Зелень", "Экзотика", "Грибы");
 
+        // Передаём в шаблон -> в форму -> в поле выбора категории список категорий
+        List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);
+
         return "setproduct";
     }
 
+    // Обработка формы добавления продукта
     @PostMapping("/setproduct")
     public String setProduct(
+            // Принимаем измененный продукт из шаблона
             @ModelAttribute("product") Product product,
+            // Принимаем из шаблона объект картинку(необязательный параметр)
             @RequestParam(name = "imageFile", required = false) MultipartFile imageFile,
             Model model) throws IOException {
 
+        // Получаем продукт по id, из принимаемого продукта
         Product productById = productRepository.findById(product.getId()).orElseThrow();
 
-        productById.setName(product.getName());
-        productById.setCurrentPrice(product.getCurrentPrice());
-        productById.setCategory(product.getCategory());
-        productById.setCountry(product.getCountry());
-        productById.setDescription(product.getDescription());
-        productById.setPacking(product.getPacking());
-        productById.setSeasonality(product.getSeasonality());
-        productById.setVariety(product.getVariety());
-        productById.setWhereBuy(product.getWhereBuy());
-
+        // Если новое изображение не передано, присваевается старый url
+//        Не передаётся url из шаблона!!!
         if (!imageFile.isEmpty()) {
-
             String fileName = imageService.saveImage(imageFile);
-            productById.setImg("images/" + fileName);
+            product.setImg("images/" + fileName);
+        } else {
+            product.setImg(productById.getImg());
         }
 
-        productRepository.save(productById);
-
+        // Обновляем пробукт в БД
+        productRepository.save(product);
         model.addAttribute("message", "Продукт изменен.");
 
         return "setproduct";
     }
 
+    // Удаление продукта по id
     @PostMapping("/delproduct")
-    public String delProduct(
-            @RequestParam Long id){
-        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+    public String delProduct(@RequestParam Long id) {
         productRepository.deleteById(id);
-        
         return "redirect:/products";
-        
     }
 }
