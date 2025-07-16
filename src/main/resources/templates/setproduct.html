@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Изменение продукта</title>
+
+    </head>
+    <body>
+
+        <h3 >Изменить продукт</h3>
+
+        <div th:replace="~{fragments/navigate :: navigate}"></div>
+
+
+
+
+
+
+        <div>
+            <!-- Сообщение об успехе -->
+            <div th:if="${message != null}"  th:text="${message}"></div>
+
+
+
+            <form th:action="@{/setproduct}" method="post" th:object="${product}" enctype="multipart/form-data">
+
+                <!-- Скрытое поле для ID -->
+                <input type="hidden" th:field="*{id}">
+
+                <!-- Изображение продукта-->
+                <div >
+                    <label for="imageFile" >Изображение продукта</label>
+                    <input type="file"   name="imageFile" accept="image/*">
+                    <small >Допустимые форматы: JPG, PNG, GIF</small>
+                    <!-- Показ текущего изображения -->
+                    <div th:if="${product.img != null}">
+                        <img th:src="@{'/' + ${product.img}}"  style="max-height: 100px;">
+                    </div>
+                </div>
+                <!-- Название продукта -->
+                <div >
+                    <label for="name" >Название продукта</label>
+                    <input type="text"   th:field="*{name}" required>
+                </div>
+                <!-- Цена за кг -->
+                <div >
+                    <label for="currentPrice" >Цена за кг</label>
+                    <input type="number"  th:field="*{currentPrice}" >
+                </div>
+                <!-- Сорт -->
+                <div >
+                    <label for="variety" >Сорт</label>
+                    <input type="text"   th:field="*{variety}" >
+                </div>
+                <!-- Категория -->
+                <div >
+                    <label for="category" >Категория</label>
+                    <select   
+                        th:field="*{category}" >
+                        <option value="">Выберите категорию</option>
+                        <option th:each="cat : ${categories}" 
+                                th:value="${cat}" 
+                                th:text="${cat}">
+                        </option>
+                    </select>
+                </div>
+                <!-- Описание -->
+                <div>
+                    <label for="description" >Описание</label>
+                    <input type="text" th:field="*{description}" >
+                </div>
+                <!-- Место продажи -->
+                <div >
+                    <label for="whereBuy" >Место продажи</label>
+                    <input type="text"   
+                           th:field="*{whereBuy}">
+                </div>
+                <!-- Формат упаковки -->
+                <div >
+                    <label for="packing" >Формат упаковки</label>
+                    <input type="text"   
+                           th:field="*{packing}">
+                </div>
+
+                <!-- Страна производитель -->
+                <div >
+                    <label for="country" >Страна производитель</label>
+                    <input type="text"   
+                           th:field="*{country}">
+                </div>
+
+                <button type="submit" >Сохранить изменения</button>
+
+                
+
+            </form>
+            
+            <form th:action="@{/delproduct}" method="post" th:if="${product.id != null}">
+                <input type="hidden" name="id" th:value="${product.id}">
+                <button type="submit" class="btn btn-sm btn-link">Удалить продукт</button>
+            </form>
+
+
+
+
+    </body>
+</html>
