@@ -35,4 +35,18 @@ public class ImageService {
 
         return fileName;
     }
+
+    public void deleteImage(String fileUrl) {
+
+        // url откуда удалять изображение "src/main/resources/static/images/" - images/
+        String deletePath = "src/main/resources/static/" + fileUrl; // Где fileUrl содержит images/imgName.jpg
+
+        // Если существует такой файл, он удаляется.        
+        Path path = Paths.get(deletePath);
+        try {
+            Files.delete(path);
+        } catch (Exception e) {
+        }
+
+    }
 }

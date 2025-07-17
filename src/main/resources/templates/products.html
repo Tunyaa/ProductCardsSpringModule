@@ -83,7 +83,7 @@
                             <td th:text="${product.name}"></td>
                             <td th:text="${product.variety} ?: '-'"></td>
                             <td th:text="${product.category}"></td>
-                            <td class="price-cell" th:text="${#numbers.formatDecimal(product.currentPrice, 1, 2)} + ' ₽'"></td>
+                            <td class="price-cell" th:text="${#numbers.formatDecimal(product.currentPrice, 1, 0)} + ' ₽'"></td>
                             <td th:text="${product.packing}"></td>
                             <td th:text="${product.whereBuy}"></td>
 

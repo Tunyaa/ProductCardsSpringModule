@@ -43,7 +43,7 @@ public class Product {
 
     private String seasonality; // Сезонность(Июль - Сентябрь, Октябрь - Февраль)
 
-    @Column(precision = 19, scale = 2)
+    @Column(precision = 19, scale = 0)
     private BigDecimal currentPrice; // Последняя цена покупки данного товара
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
@@ -51,7 +51,9 @@ public class Product {
 
     // Метод для обновления цены и сохранением старой цены в историю
     private void updatePrice(BigDecimal newPrice) {
-        this.priceHistory.add(new PriceHistory(this, this.currentPrice)); // Создаём нувую запись цены на продукт
+        if (this.currentPrice != null) {
+          this.priceHistory.add(new PriceHistory(this, this.currentPrice)); // Создаём нувую запись цены на продукт  
+        }        
 
         currentPrice = newPrice; // Ставим актуальную цену на продукт
     }
@@ -141,7 +143,8 @@ public class Product {
     }
 
     public void setCurrentPrice(BigDecimal currentPrice) {
-        this.currentPrice = currentPrice;
+        updatePrice(currentPrice);
+        
     }
 
     public List<PriceHistory> getPriceHistory() {

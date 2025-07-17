@@ -24,10 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Controller
 public class ProductController {
-
+    
     private final ProductRepository productRepository;
     private final ImageService imageService;
-
+    
     public ProductController(ProductRepository productRepository, ImageService imageService) {
         this.productRepository = productRepository;
         this.imageService = imageService;
@@ -36,10 +36,10 @@ public class ProductController {
     // Показать все продукты
     @GetMapping("/products")
     public String showProducts(Model model) {
-
+        
         List<Product> products = productRepository.findAll();
         model.addAttribute("products", products);
-
+        
         return "products";
     }
 
@@ -54,7 +54,7 @@ public class ProductController {
         // Передаём в ышаблон -> в форму -> в поле выбора категории список категорий
         List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);
-
+        
         return "addproduct";
     }
 
@@ -83,7 +83,7 @@ public class ProductController {
 
         // Возвращаем ту же форму с сообщением
         model.addAttribute("product", new Product());
-
+        
         return "addproduct";
     }
 
@@ -100,7 +100,7 @@ public class ProductController {
         // Передаём в шаблон -> в форму -> в поле выбора категории список категорий
         List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);
-
+        
         return "setproduct";
     }
 
@@ -120,21 +120,43 @@ public class ProductController {
 //        Не передаётся url из шаблона!!!
         if (!imageFile.isEmpty()) {
             String fileName = imageService.saveImage(imageFile);
+            // Если изображение меняется на новое, старое удаляется.
+            imageService.deleteImage(productById.getImg());
             product.setImg("images/" + fileName);
+            productById.setImg("images/" + fileName);
         } else {
             product.setImg(productById.getImg());
         }
+        
+        productById.setCurrentPrice(product.getCurrentPrice());
+        productById.setCountry(product.getCountry());
+        productById.setCategory(product.getCategory());
+        productById.setDescription(product.getDescription());
+        productById.setName(product.getName());
+        productById.setPacking(product.getPacking());
+        productById.setSeasonality(product.getSeasonality());
+        productById.setVariety(product.getVariety());
+        productById.setWhereBuy(product.getWhereBuy());
+        
+
+//        // Если цена изменяется, то старая цена заносится в историю цен
+//        if (!product.getCurrentPrice().equals(productById.getCurrentPrice())) {
+//            productById.setCurrentPrice(product.getCurrentPrice());
+//        }
+
 
         // Обновляем пробукт в БД
-        productRepository.save(product);
+        productRepository.save(productById);
         model.addAttribute("message", "Продукт изменен.");
-
+        
         return "setproduct";
     }
 
     // Удаление продукта по id
     @PostMapping("/delproduct")
     public String delProduct(@RequestParam Long id) {
+        // Удаляется изображение затем объект из БД
+        imageService.deleteImage(productRepository.findById(id).get().getImg());
         productRepository.deleteById(id);
         return "redirect:/products";
     }
