@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import module.ProductCardsSpringModule.model.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,12 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ImageService {
 
-    public String saveImage(MultipartFile imageFile) throws IOException {
+    // Копирует изображение в деррикторию
+    private String saveImage(MultipartFile imageFile) throws IOException {
         // url куда помещать изображение
         String uploadDir = "src/main/resources/static/images/";
         // Иминование изображения
         String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
-        // Создаём путь в файловой системе
+        // Создаёт путь в файловой системе
         Path uploadPath = Paths.get(uploadDir);
         // Если папки не существует, она создаётся
         if (!Files.exists(uploadPath)) {
@@ -36,17 +38,25 @@ public class ImageService {
         return fileName;
     }
 
-    public void deleteImage(String fileUrl) {
+    // Удаляет изображение
+    public void deleteImage(String fileUrl) throws IOException {
 
         // url откуда удалять изображение "src/main/resources/static/images/" - images/
         String deletePath = "src/main/resources/static/" + fileUrl; // Где fileUrl содержит images/imgName.jpg
 
         // Если существует такой файл, он удаляется.        
         Path path = Paths.get(deletePath);
-        try {
-            Files.delete(path);
-        } catch (Exception e) {
-        }
+        Files.delete(path);
+    }
 
+    // Присваевает полю продукта url изображения, если изображение передано
+    public void saveImageIfExist(MultipartFile imageFile, Product product) throws IOException {
+        // Сохраняет изображение, если оно было загружено
+        if (!imageFile.isEmpty()) {
+            // Изображение копируется по url
+            String fileName = saveImage(imageFile);
+            // url сохраняется в поле продукта
+            product.setImg("images/" + fileName);
+        }
     }
 }
