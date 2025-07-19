@@ -23,7 +23,25 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><h1>список заказа</h1></td>
+                    <td>
+                        <table border="1">
+                            <thead>
+                                <tr>
+                                    <th><h1></h1></th>
+                                    <th><h1></h1></th>
+                                    <th><h1>Сколько</h1></th>
+                                    <th><h1>Куда</h1></th>
+                                </tr>
+                            </thead>
+                            <tr th:each="position : ${positions}">
+                                <td><img th:src="@{${position.product.img}}" class="product-img"/></td>
+                                <td th:text="${position.product.name}"></td>
+                                <td th:text="${position.quantity}"></td>
+                                <td th:text="${position.consumer}"></td>
+                            </tr>
+
+                        </table>
+                    </td>
                     <td>
                         <table border="1">
                             <tr th:each="product : ${products}">
@@ -38,11 +56,25 @@
                                 <td th:text="${product.packing}"></td>
                                 <td> 
                                     <form th:action="@{/order/create}" method="get" th:object="${position}">
-                                        <input type="number" th:value="*{quantity}" placeholder="Сколько кг или шт">
+
+                                        <input type="hidden" name="productId" th:value="${product.id}">
+
+                                        <input type="number" th:field="*{quantity}" >
+
+                                        <select   
+                                            th:field="*{consumer}" >
+                                            <option value="">*</option>
+                                            <option th:each="consumer : ${consumers}" 
+                                                    th:value="${consumer}" 
+                                                    th:text="${consumer}">
+                                            </option>
+                                        </select>
+
+
                                         <button type="submit" >Добавить</button>
                                     </form>
 
-// Доделать модель. В Гет метод должен заходить Ордер и Позиция не рекваер, возможно. Ордер ролжен отображаться слева. 
+
 
                                 </td>
                             </tr>

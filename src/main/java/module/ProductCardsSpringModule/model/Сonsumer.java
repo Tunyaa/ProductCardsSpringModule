@@ -4,6 +4,6 @@ package module.ProductCardsSpringModule.model;
  *
  * @author tunyaa
  */
-public enum Buyer {
+public enum Сonsumer {
     КАФЕ, КЛУБ, КОНДИТЕРСКАЯ;
 }
