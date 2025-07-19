@@ -1,6 +1,8 @@
 package module.ProductCardsSpringModule.service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 import module.ProductCardsSpringModule.model.Product;
 import module.ProductCardsSpringModule.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -64,5 +66,17 @@ public class ProductService {
             System.getLogger(ProductService.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         productRepository.deleteById(id);
+    }
+
+    // Возвращает List всех продуктов
+    public List<Product> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products;
+    }
+
+    // Возвращает продукт по id
+    public Product findProductById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow();
+        return product;
     }
 }

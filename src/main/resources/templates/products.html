@@ -75,7 +75,7 @@
                         <tr th:each="product : ${products}">
                             <td>
                                 <img th:if="${product.img != null}" 
-                                     th:src="@{'/' + ${product.img}}" 
+                                     th:src="@{${product.img}}" 
                                      alt="Фото продукта" 
                                      class="product-img">
                                 <span th:unless="${product.img != null}">Нет фото</span>

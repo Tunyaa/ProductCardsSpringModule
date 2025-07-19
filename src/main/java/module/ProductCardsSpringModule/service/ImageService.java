@@ -56,7 +56,7 @@ public class ImageService {
             // Изображение копируется по url
             String fileName = saveImage(imageFile);
             // url сохраняется в поле продукта
-            product.setImg("images/" + fileName);
+            product.setImg("/images/" + fileName);
         }
     }
 }

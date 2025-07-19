@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class ProductController {
 
-    private final ProductRepository productRepository;
+    private final ProductRepository productRepository; // УБРАТЬ ПОЛЕ
     private final ImageService imageService;
     private final ProductService productService;
 
@@ -37,7 +37,8 @@ public class ProductController {
     @GetMapping("/products")
     public String showProducts(Model model) {
 
-        List<Product> products = productRepository.findAll();
+//        List<Product> products = productRepository.findAll();
+        List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
 
         return "products";
@@ -89,7 +90,8 @@ public class ProductController {
             @RequestParam Long id, Model model) throws IOException {
 
         // Получает продукт по id и передаёт в шаблон
-        Product product = productRepository.findById(id).orElseThrow();
+//        Product product = productRepository.findById(id).orElseThrow();
+        Product product = productService.findProductById(id);
         model.addAttribute("product", product);
 
         // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий

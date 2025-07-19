@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Создание заказа</title>
+        <style>
+            .product-img{
+                max-width: 140px;
+                max-height: 140px;
+                border-radius: 4px;
+            }
+        </style>
+    </head>
+    <body>
+        <div th:insert="~{fragments/navigate :: navigate}"></div>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th><h1>Корзина</h1></th>
+                    <th><h1>Все продукты</h1></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><h1>список заказа</h1></td>
+                    <td>
+                        <table border="1">
+                            <tr th:each="product : ${products}">
+                                <td>
+                                    <img th:if="${product.img != null}" 
+                                         th:src="@{${product.img}}" 
+                                         alt="Фото продукта" 
+                                         class="product-img">
+                                    <span th:unless="${product.img != null}">Нет фото</span>
+                                </td>
+                                <td th:text="${product.name}"></td>
+                                <td th:text="${product.packing}"></td>
+                                <td> 
+                                    <form th:action="@{/order/create}" method="get" th:object="${position}">
+                                        <input type="number" th:value="*{quantity}" placeholder="Сколько кг или шт">
+                                        <button type="submit" >Добавить</button>
+                                    </form>
+
+// Доделать модель. В Гет метод должен заходить Ордер и Позиция не рекваер, возможно. Ордер ролжен отображаться слева. 
+
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </body>
+</html>
