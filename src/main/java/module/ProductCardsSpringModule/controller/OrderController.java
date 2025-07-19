@@ -51,31 +51,33 @@ public class OrderController {
         return "/create-order";
     }
 
+    @PostMapping("/create")
+    public String createOrder() {
+        orderService.createOrder();
+        return "/order/create";
+    }
+
     @PostMapping("/add")
     public String addPosition(@ModelAttribute Position position) {
 
-        if (position.getQuantity() != 0) {
+        System.out.println("&&&&&&&&&&&&& addPositionaddPosition");
+        if (position.getQuantity() > 0) {
 
             orderService.addPosition(position);
         }
         return "redirect:/order/create";
     }
-//    @PostMapping("/add")
-//    public String addPosition(
-//            @ModelAttribute("position") Position position,            
-//            Model model
-//    ) {
-//        if (position.getQuantity() != 0) {
-//
-//            orderService.addPosition(position);
-//        }
-//        
-//        return "fragments/position-list :: position-list"; // Возвращаем только фрагмент таблицы
-//    }
 
     @PostMapping("/clear")
     public String clearPositions() {
         orderService.clearPositions();
+        return "redirect:/order/create";
+    }
+    
+    @PostMapping("/deletePosition")
+    public String deletePosition(@ModelAttribute Position position){
+        orderService.deletePosition(position);
+        System.out.println(position.getId() + "&&&&&& " );
         return "redirect:/order/create";
     }
 

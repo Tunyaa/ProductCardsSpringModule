@@ -10,9 +10,6 @@
                 border-radius: 4px;
             }
         </style>
-        <script >
-            
-        </script>
     </head>
     <body>
         <div th:insert="~{fragments/navigate :: navigate}"></div>
@@ -25,7 +22,7 @@
 
                             <button type="submit" >Очистить список</button>
                         </form>
-                        
+
                     </th>
                     <th><h1>Все продукты</h1></th>
                 </tr>
@@ -52,8 +49,9 @@
                                     <form th:action="@{/order/add}" method="post" th:object="${position}">
 
                                         <input type="hidden" name="productId" th:value="${product.id}">
-
-                                        <input type="number" name="quantity"  >
+                                        
+                                        <div><label>кг</label></div>
+                                        <input type="number" name="quantity" step="0.001" style="width: 80px;" required>
 
                                         <select   
                                             th:field="*{consumer}" >
@@ -78,6 +76,12 @@
 
             </tbody>
         </table>
+        
+        <form th:action="@{/order/creaet}" method="post" >
+            <button type="submit" >Подтвердить заказ</button>
+        </form>
+
+
 
     </body>
 </html>
