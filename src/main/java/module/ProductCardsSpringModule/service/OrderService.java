@@ -34,4 +34,8 @@ public class OrderService {
         return positions;
     }
 
+    public void clearPositions() {
+        positions.clear();
+    }
+
 }

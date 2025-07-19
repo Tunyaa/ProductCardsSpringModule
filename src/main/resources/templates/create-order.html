@@ -10,6 +10,9 @@
                 border-radius: 4px;
             }
         </style>
+        <script >
+            
+        </script>
     </head>
     <body>
         <div th:insert="~{fragments/navigate :: navigate}"></div>
@@ -17,30 +20,21 @@
         <table border="1">
             <thead>
                 <tr>
-                    <th><h1>Корзина</h1></th>
+                    <th><h1>Корзина</h1> 
+                        <form th:action="@{/order/clear}" method="post">
+
+                            <button type="submit" >Очистить список</button>
+                        </form>
+                        
+                    </th>
                     <th><h1>Все продукты</h1></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-                        <table border="1">
-                            <thead>
-                                <tr>
-                                    <th><h1></h1></th>
-                                    <th><h1></h1></th>
-                                    <th><h1>Сколько</h1></th>
-                                    <th><h1>Куда</h1></th>
-                                </tr>
-                            </thead>
-                            <tr th:each="position : ${positions}">
-                                <td><img th:src="@{${position.product.img}}" class="product-img"/></td>
-                                <td th:text="${position.product.name}"></td>
-                                <td th:text="${position.quantity}"></td>
-                                <td th:text="${position.consumer}"></td>
-                            </tr>
+                        <div th:insert="~{fragments/positions-list :: positions-list}"></div>
 
-                        </table>
                     </td>
                     <td>
                         <table border="1">
@@ -55,11 +49,11 @@
                                 <td th:text="${product.name}"></td>
                                 <td th:text="${product.packing}"></td>
                                 <td> 
-                                    <form th:action="@{/order/create}" method="get" th:object="${position}">
+                                    <form th:action="@{/order/add}" method="post" th:object="${position}">
 
                                         <input type="hidden" name="productId" th:value="${product.id}">
 
-                                        <input type="number" th:field="*{quantity}" >
+                                        <input type="number" name="quantity"  >
 
                                         <select   
                                             th:field="*{consumer}" >
