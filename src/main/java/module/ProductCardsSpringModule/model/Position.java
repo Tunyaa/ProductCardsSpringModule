@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import java.util.UUID;
 
 /**
@@ -17,14 +18,30 @@ import java.util.UUID;
  */
 // Позиция - состовная часть заказа, стостоит из продукта,
 // количества в кг или шт и для кого преобретается.
+//
+//
+// Цикл жизни позиции: 
+//В контроллере в методе get создаётся пустая позиция и передаётся в шаблон
+//В шаблоне пользователь выбирает продукт, id продукта добавляется в поле  priductId позиции и
+//возвращается из шаблона в контроллер метод post /add и далее в метод addPosition()
+//В методе из БД по productId достаётся и присваевается продукт
+//Генерируется явно id(UUID) позиции(Чтобы при удалении можно было найти позицию по id)
+//(Позиции не сохраняются в БД до подтверждения заказа(Order))
+//Далее позиция помещается в List и метод завершается редиректом на get /create
+//List с позициями передаётся в шаблон
+//В шаблоне выводится List позиций
+//
+//
 @Entity
 @Table(name = "positions")
 public class Position {
 
-    @Id    
-    @GeneratedValue(strategy =  GenerationType.UUID)
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     public UUID id;
 
+    // Поле не сохраняется в БД. Данное поле нужно только на этапе формирования объекта
+    @Transient
     private Long productId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,8 +59,6 @@ public class Position {
     public void setId(UUID id) {
         this.id = id;
     }
-
-    
 
     public Long getProductId() {
         return productId;

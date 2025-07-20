@@ -52,15 +52,16 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public String createOrder() {
+    public String createOrder(Model model) {
         orderService.createOrder();
+        model.addAttribute("message", "Заказ создан!");
         return "/order/create";
     }
 
     @PostMapping("/add")
     public String addPosition(@ModelAttribute Position position) {
 
-        System.out.println("&&&&&&&&&&&&& addPositionaddPosition");
+        
         if (position.getQuantity() > 0) {
 
             orderService.addPosition(position);
@@ -77,7 +78,7 @@ public class OrderController {
     @PostMapping("/deletePosition")
     public String deletePosition(@ModelAttribute Position position){
         orderService.deletePosition(position);
-        System.out.println(position.getId() + "&&&&&& " );
+        
         return "redirect:/order/create";
     }
 

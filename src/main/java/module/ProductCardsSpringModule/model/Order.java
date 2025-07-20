@@ -25,10 +25,10 @@ public class Order {
     private Long id;
 
 //    // Список из позиций образует заказ
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "order_id") // Связь через внешний ключ в таблице Position
-//    private List<Position> positions = new ArrayList<>();
-//
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id") // Связь через внешний ключ в таблице Position
+    private List<Position> positions = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
@@ -36,14 +36,14 @@ public class Order {
     public void setId(Long id) {
         this.id = id;
     }
-//
-//    public List<Position> getPositions() {
-//        return positions;
-//    }
-//
-//    public void setPositions(List<Position> positions) {
-//        this.positions = positions;
-//    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<Position> positions) {
+        this.positions = positions;
+    }
 
 
 }

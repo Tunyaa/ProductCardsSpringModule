@@ -80,7 +80,7 @@ public class ProductController {
         // Возвращает ту же форму с сообщением
         model.addAttribute("product", new Product());
 
-        return "addproduct";
+        return "redirect:/addproduct";
     }
 
     // Отображение формы изменения продукта
