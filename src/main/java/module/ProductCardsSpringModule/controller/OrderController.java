@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -48,20 +49,20 @@ public class OrderController {
         List<Product> allProducts = productService.getAllProducts();
         model.addAttribute("products", allProducts);
 
-        return "/create-order";
+        return "create-order";
     }
 
     @PostMapping("/create")
-    public String createOrder(Model model) {
+    public String createOrder(RedirectAttributes redirectAttributes) {
         orderService.createOrder();
-        model.addAttribute("message", "Заказ создан!");
-        return "/order/create";
+        redirectAttributes.addFlashAttribute("message", "Заказ создан!");
+//        model.addAttribute("message", "Заказ создан!");
+        return "redirect:/order/create";
     }
 
     @PostMapping("/add")
     public String addPosition(@ModelAttribute Position position) {
 
-        
         if (position.getQuantity() > 0) {
 
             orderService.addPosition(position);
@@ -74,11 +75,11 @@ public class OrderController {
         orderService.clearPositions();
         return "redirect:/order/create";
     }
-    
+
     @PostMapping("/deletePosition")
-    public String deletePosition(@ModelAttribute Position position){
+    public String deletePosition(@ModelAttribute Position position) {
         orderService.deletePosition(position);
-        
+
         return "redirect:/order/create";
     }
 

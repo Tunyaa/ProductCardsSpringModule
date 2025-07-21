@@ -14,7 +14,7 @@
     <body>
         <div th:insert="~{fragments/navigate :: navigate}"></div>
 
-        <div th:if="${message != null}" th:text="${message}" >Создание заказа</div>
+        <div th:if="${message != null}" th:text="${message}" ></div>
         <form th:action="@{/order/create}" method="post" >
             <button type="submit" >Подтвердить заказ</button>
         </form>

@@ -50,8 +50,14 @@ public class OrderService {
     public void createOrder() {
         // Создается новый заказ, куда помещяется текущий список позиций и сохраняется в БД
         Order order = new Order();
-        for (Position position : positions) {
+        for (Position positionDto : positions) {
 //            positionRepository.save(position);
+            Position position = new Position();
+            position.setConsumer(positionDto.getConsumer());
+            position.setProduct(positionDto.getProduct());
+            position.setQuantity(positionDto.getQuantity());
+            
+            
             order.getPositions().add(position);
         }
 //        order.setPositions(positions);
