@@ -1,7 +1,9 @@
 package module.ProductCardsSpringModule.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import module.ProductCardsSpringModule.DTO.PositionDTO;
 import module.ProductCardsSpringModule.model.Order;
@@ -61,6 +63,7 @@ public class OrderService {
 
             order.getPositions().add(position);
         }
+        order.setCreatedAt(LocalDateTime.now());
 
         orderRepository.save(order);
         // Сприсок очищается
@@ -71,6 +74,34 @@ public class OrderService {
 
         positions.removeIf(e -> e.getId().equals(position.getId()));
 
+    }
+
+    public List<Order> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return orders;
+    }
+
+    public List<PositionDTO> getPositionsByOrderId(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow();
+        clearPositions();
+        for (Position position : order.getPositions()) {
+            PositionDTO positionDTO = new PositionDTO();
+            
+            positionDTO.setId(UUID.randomUUID());
+            positionDTO.setProduct(position.getProduct());
+            positionDTO.setProductId(positionDTO.getProduct().getId());
+            positionDTO.setQuantity(position.getQuantity());
+            positionDTO.setConsumer(position.getConsumer());
+
+            positions.add(positionDTO);
+        }
+        
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&&");
+        
+        for (PositionDTO position : positions) {
+            System.out.println(position.getProduct().getName());
+        }
+        return positions;
     }
 
 }

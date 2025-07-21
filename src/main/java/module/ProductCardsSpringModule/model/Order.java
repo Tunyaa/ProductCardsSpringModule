@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class Order {
     @JoinColumn(name = "order_id") // Связь через внешний ключ в таблице Position
     private List<Position> positions = new ArrayList<>();
 
+    private LocalDateTime createdAt;
+
     public Long getId() {
         return id;
     }
@@ -45,5 +48,12 @@ public class Order {
         this.positions = positions;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
 }

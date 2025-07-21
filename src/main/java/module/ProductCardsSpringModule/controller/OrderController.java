@@ -3,6 +3,7 @@ package module.ProductCardsSpringModule.controller;
 import java.util.Arrays;
 import java.util.List;
 import module.ProductCardsSpringModule.DTO.PositionDTO;
+import module.ProductCardsSpringModule.model.Order;
 import module.ProductCardsSpringModule.model.Сonsumer;
 import module.ProductCardsSpringModule.model.Position;
 import module.ProductCardsSpringModule.model.Product;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -83,6 +85,19 @@ public class OrderController {
 
         return "redirect:/order/create";
     }
-    
+
+    @GetMapping("/showorders")
+    public String showOrder(Model model) {
+        List<Order> orders = orderService.getAllOrders();
+        model.addAttribute("orders", orders);
+
+        return "orders";
+    }
+
+    @GetMapping("/setorder")
+    public String setOrder(Model model, @RequestParam Long id) {
+        List<PositionDTO> positions = orderService.getPositionsByOrderId(id);
+        return "redirect:/order/create";
+    }
 
 }

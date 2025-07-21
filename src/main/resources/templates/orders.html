@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Все заказы</title>
+
+    </head>
+    <body>
+        <div th:insert="~{fragments/navigate :: navigate}"></div>
+
+        
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Дата создания</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="order : ${orders}">
+                    <td >
+                        <a th:href="@{/order/setorder(id=${order.id})}">
+                            <span>Заказ номер: </span>
+                        <span th:text="${order.id}"></span>
+                        <span> от </span>
+                        <span th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}"></span>
+                        <!-- Выведет: 15.07.2023 14:30 -->
+                        </a>
+                        
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <div th:insert="~{fragments/footer-fragment :: footer-fragment}"></div>
+
+    </body>
+</html>
