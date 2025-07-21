@@ -2,6 +2,7 @@ package module.ProductCardsSpringModule.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import module.ProductCardsSpringModule.DTO.PositionDTO;
 import module.ProductCardsSpringModule.model.Сonsumer;
 import module.ProductCardsSpringModule.model.Position;
 import module.ProductCardsSpringModule.model.Product;
@@ -43,7 +44,7 @@ public class OrderController {
         model.addAttribute("consumers", Arrays.asList(Сonsumer.values()));
 
         // Передаёт пустую позицию в шаблон
-        model.addAttribute("position", new Position());
+        model.addAttribute("position", new PositionDTO());
 
         // Передаёт весь список продуктов в шаблон
         List<Product> allProducts = productService.getAllProducts();
@@ -56,12 +57,12 @@ public class OrderController {
     public String createOrder(RedirectAttributes redirectAttributes) {
         orderService.createOrder();
         redirectAttributes.addFlashAttribute("message", "Заказ создан!");
-//        model.addAttribute("message", "Заказ создан!");
+
         return "redirect:/order/create";
     }
 
     @PostMapping("/add")
-    public String addPosition(@ModelAttribute Position position) {
+    public String addPosition(@ModelAttribute PositionDTO position) {
 
         if (position.getQuantity() > 0) {
 
@@ -77,10 +78,11 @@ public class OrderController {
     }
 
     @PostMapping("/deletePosition")
-    public String deletePosition(@ModelAttribute Position position) {
+    public String deletePosition(@ModelAttribute PositionDTO position) {
         orderService.deletePosition(position);
 
         return "redirect:/order/create";
     }
+    
 
 }

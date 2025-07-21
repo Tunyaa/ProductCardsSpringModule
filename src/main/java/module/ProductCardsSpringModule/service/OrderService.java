@@ -3,6 +3,7 @@ package module.ProductCardsSpringModule.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import module.ProductCardsSpringModule.DTO.PositionDTO;
 import module.ProductCardsSpringModule.model.Order;
 import module.ProductCardsSpringModule.model.Position;
 import module.ProductCardsSpringModule.repository.OrderRepository;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OrderService {
 
-    private List<Position> positions = new ArrayList<>();
+    private List<PositionDTO> positions = new ArrayList<>();
     public final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final PositionRepository positionRepository;
@@ -29,7 +30,7 @@ public class OrderService {
         this.positionRepository = positionRepository;
     }
 
-    public void addPosition(Position position) {
+    public void addPosition(PositionDTO position) {
 
         position.setProduct(productRepository.findById(position.getProductId()).orElseThrow());
 
@@ -39,34 +40,34 @@ public class OrderService {
 
     }
 
-    public List<Position> getAllPositions() {
+    public List<PositionDTO> getAllPositions() {
         return positions;
     }
 
     public void clearPositions() {
         positions.clear();
     }
-@Transactional
+
+    @Transactional
     public void createOrder() {
         // Создается новый заказ, куда помещяется текущий список позиций и сохраняется в БД
         Order order = new Order();
-        for (Position positionDto : positions) {
-//            positionRepository.save(position);
+        for (PositionDTO positionDto : positions) {
+
             Position position = new Position();
             position.setConsumer(positionDto.getConsumer());
             position.setProduct(positionDto.getProduct());
             position.setQuantity(positionDto.getQuantity());
-            
-            
+
             order.getPositions().add(position);
         }
-//        order.setPositions(positions);
+
         orderRepository.save(order);
         // Сприсок очищается
         clearPositions();
     }
 
-    public void deletePosition(Position position) {
+    public void deletePosition(PositionDTO position) {
 
         positions.removeIf(e -> e.getId().equals(position.getId()));
 

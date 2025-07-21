@@ -40,10 +40,6 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.UUID)
     public UUID id;
 
-    // Поле не сохраняется в БД. Данное поле нужно только на этапе формирования объекта
-    @Transient
-    private Long productId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinTable(name = "product_id")
     private Product product;
@@ -58,14 +54,6 @@ public class Position {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
     }
 
     public double getQuantity() {
