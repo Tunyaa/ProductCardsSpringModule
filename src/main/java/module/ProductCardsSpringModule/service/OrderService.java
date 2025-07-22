@@ -21,31 +21,33 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OrderService {
 
-    private List<PositionDTO> positions = new ArrayList<>();
+    private List<PositionDTO> positions;
     public final OrderRepository orderRepository;
     private final ProductRepository productRepository;
-    private final PositionRepository positionRepository;
 
-    public OrderService(OrderRepository orderRepository, ProductRepository productRepository, PositionRepository positionRepository) {
+    public OrderService(OrderRepository orderRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
-        this.positionRepository = positionRepository;
+        this.positions = new ArrayList<>();
     }
 
+    // Добавляет позицию в список
     public void addPosition(PositionDTO position) {
-
+        // Загружает продукт из БД по id. Присваивает продукт позиции
         position.setProduct(productRepository.findById(position.getProductId()).orElseThrow());
-
+        // Присваивает id позиции. Используется в deletePosition() - удалить позицию из списка по id
         position.setId(UUID.randomUUID());
-
+        // Добавляет позицию в список
         positions.add(position);
 
     }
 
+    // Возвращает List позиций
     public List<PositionDTO> getAllPositions() {
         return positions;
     }
 
+    // Очищает List позиций
     public void clearPositions() {
         positions.clear();
     }
@@ -55,53 +57,58 @@ public class OrderService {
         // Создается новый заказ, куда помещяется текущий список позиций и сохраняется в БД
         Order order = new Order();
         for (PositionDTO positionDto : positions) {
-
+            // Создаёт позицию на основе DTO
             Position position = new Position();
             position.setConsumer(positionDto.getConsumer());
             position.setProduct(positionDto.getProduct());
             position.setQuantity(positionDto.getQuantity());
 
+            // Добавляет позицию в список позиций в заказе
             order.getPositions().add(position);
         }
+
+        // Присваивает полю заказа текущую дату и время
         order.setCreatedAt(LocalDateTime.now());
 
+        // Сохраняет заказ в БД
         orderRepository.save(order);
-        // Сприсок очищается
+        // Очищает List позиций
         clearPositions();
     }
 
+    // Удаляет позицию из списка по id
     public void deletePosition(PositionDTO position) {
-
         positions.removeIf(e -> e.getId().equals(position.getId()));
-
     }
 
+    // Возвращает список заказов
     public List<Order> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
         return orders;
     }
 
+    // Возвращает список позиций заказа по id заказа
     public List<PositionDTO> getPositionsByOrderId(Long id) {
+        // Загружает заказ по id из БД, очищает список.
         Order order = orderRepository.findById(id).orElseThrow();
         clearPositions();
+
         for (Position position : order.getPositions()) {
             PositionDTO positionDTO = new PositionDTO();
-
+            // Создаёт DTO на основе позиции из списка позиций заказа
             positionDTO.setId(UUID.randomUUID());
             positionDTO.setProduct(position.getProduct());
             positionDTO.setProductId(positionDTO.getProduct().getId());
             positionDTO.setQuantity(position.getQuantity());
             positionDTO.setConsumer(position.getConsumer());
-
+            // Добавляет DTO в список
             positions.add(positionDTO);
         }
-
-        for (PositionDTO position : positions) {
-            System.out.println(position.getProduct().getName());
-        }
+        
         return positions;
     }
 
+    // Удаляет заказ по id
     public void deleteOrderByID(Long id) {
         orderRepository.deleteById(id);
     }

@@ -90,7 +90,6 @@ public class ProductController {
             @RequestParam Long id, Model model) throws IOException {
 
         // Получает продукт по id и передаёт в шаблон
-//        Product product = productRepository.findById(id).orElseThrow();
         Product product = productService.findProductById(id);
         model.addAttribute("product", product);
 

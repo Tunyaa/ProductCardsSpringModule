@@ -55,6 +55,7 @@ public class OrderController {
         return "create-order";
     }
 
+    // Создаёт новый заказ
     @PostMapping("/create")
     public String createOrder(RedirectAttributes redirectAttributes) {
         orderService.createOrder();
@@ -63,22 +64,24 @@ public class OrderController {
         return "redirect:/order/create";
     }
 
+    // Добавляет повую позицию в positions, который передаётся в showCreateOrderForm()
     @PostMapping("/add")
     public String addPosition(@ModelAttribute PositionDTO position) {
-
+        // Количество продукта должно быть больше 0. В шаблоне поле помечено required
         if (position.getQuantity() > 0) {
-
             orderService.addPosition(position);
         }
         return "redirect:/order/create";
     }
 
+    // Очищает List positions
     @PostMapping("/clear")
     public String clearPositions() {
         orderService.clearPositions();
         return "redirect:/order/create";
     }
 
+    // Удаляет выбранную позицию из List positions
     @PostMapping("/deletePosition")
     public String deletePosition(@ModelAttribute PositionDTO position) {
         orderService.deletePosition(position);
@@ -86,6 +89,7 @@ public class OrderController {
         return "redirect:/order/create";
     }
 
+    // Показывает все подтвержденные заказы
     @GetMapping("/showorders")
     public String showOrder(Model model) {
         List<Order> orders = orderService.getAllOrders();
@@ -94,15 +98,17 @@ public class OrderController {
         return "orders";
     }
 
+    // Показывает позиции выбранного заказа
     @GetMapping("/setorder")
     public String setOrder(Model model, @RequestParam Long id) {
         List<PositionDTO> positions = orderService.getPositionsByOrderId(id);
         return "redirect:/order/create";
     }
     
+    // Удаляет заказ из БД
     @PostMapping("/deleteorder")
     public String deleteOrder(@ModelAttribute Order order){
-        System.out.println("&&&&&&&&&&&&&&&&&&" + order.getId());
+        
         orderService.deleteOrderByID(order.getId());
         return "redirect:/order/showorders";
     }
