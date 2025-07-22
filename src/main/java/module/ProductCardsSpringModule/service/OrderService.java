@@ -86,7 +86,7 @@ public class OrderService {
         clearPositions();
         for (Position position : order.getPositions()) {
             PositionDTO positionDTO = new PositionDTO();
-            
+
             positionDTO.setId(UUID.randomUUID());
             positionDTO.setProduct(position.getProduct());
             positionDTO.setProductId(positionDTO.getProduct().getId());
@@ -95,13 +95,15 @@ public class OrderService {
 
             positions.add(positionDTO);
         }
-        
-        System.out.println("&&&&&&&&&&&&&&&&&&&&&&");
-        
+
         for (PositionDTO position : positions) {
             System.out.println(position.getProduct().getName());
         }
         return positions;
+    }
+
+    public void deleteOrderByID(Long id) {
+        orderRepository.deleteById(id);
     }
 
 }

@@ -38,6 +38,8 @@ public class ProductService {
 //        Не передаётся url из шаблона!!!
         if (!imageFile.isEmpty()) {
             // Если изображение меняется на новое, старое удаляется.
+            
+            System.out.println("&&&&&&&&&&&&&&&& updateProduct" );
             imageService.deleteImage(productById.getImg());
             imageService.saveImageIfExist(imageFile, productById);
         }

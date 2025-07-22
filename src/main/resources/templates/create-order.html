@@ -2,113 +2,502 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>Создание заказа</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <style>
-            .product-img{
-                max-width: 140px;
-                max-height: 140px;
+            root {
+                --primary-color: #4CAF50;
+                --danger-color: #f44336;
+                --border-color: #e0e0e0;
+            }
+
+            body {
+                font-family: 'Roboto', sans-serif;
+                background-color: #f5f5f5;
+                padding-bottom: 20px;
+            }
+
+            .mobile-container {
+                padding: 0 15px;
+            }
+
+            .section-card {
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+                color: #333;
+                margin-bottom: 15px;
+                font-weight: 600;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            /* Новый стиль для сетки продуктов */
+            .products-grid {
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+                gap: 15px;
+            }
+
+            .product-card-grid {
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                padding: 12px;
+                transition: all 0.3s;
+            }
+
+            .product-card-grid:hover {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+
+            .product-img-grid {
+                width: 100%;
+                height: 100px;
+                border-radius: 6px;
+                object-fit: cover;
+                margin-bottom: 10px;
+            }
+
+            .product-name-grid {
+                font-weight: 500;
+                font-size: 14px;
+                margin-bottom: 8px;
+                height: 40px;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+
+            .product-details-grid {
+                font-size: 12px;
+                color: #666;
+                margin-bottom: 8px;
+            }
+
+            .form-group-grid {
+                margin-bottom: 8px;
+            }
+
+            .form-control-grid {
+                width: 100%;
+                padding: 6px 8px;
+                font-size: 13px;
+                border: 1px solid #ddd;
                 border-radius: 4px;
             }
+
+            .quantity-input-grid {
+                width: 60px;
+                display: inline-block;
+            }
+
+            .consumer-select-grid {
+                width: 100%;
+                font-size: 12px;
+                padding: 5px;
+                margin-bottom: 8px;
+            }
+
+            .btn-grid {
+                padding: 6px;
+                font-size: 12px;
+                width: 100%;
+            }
+
+            /* Стили для корзины (оставлены без изменений) */
+            .product-card {
+                display: flex;
+                border-bottom: 1px solid var(--border-color);
+                padding: 15px 0;
+                align-items: center;
+            }
+
+            /* Адаптивность */
+            @media (max-width: 1200px) {
+                .products-grid {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+            }
+
+            @media (max-width: 768px) {
+                .products-grid {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+            }
+
+            @media (max-width: 576px) {
+                .products-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .product-name-grid {
+                    height: auto;
+                    -webkit-line-clamp: 3;
+                }
+            }
+
+            /* Остальные стили оставлены без изменений */
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            .form-label {
+                font-size: 13px;
+                color: #555;
+                margin-bottom: 5px;
+                display: block;
+            }
+
+            .btn {
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 500;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+
+            .btn-primary {
+                background-color: var(--primary-color);
+                color: white;
+            }
+
+            .btn-danger {
+                background-color: var(--danger-color);
+                color: white;
+            }
+
+            .btn-sm {
+                padding: 6px 10px;
+                font-size: 13px;
+            }
+
+            .empty-cart {
+                text-align: center;
+                padding: 20px;
+                color: #888;
+                font-style: italic;
+            }
+
+            .action-buttons {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 20px;
+            }
+            :root {
+            --primary-color: #4CAF50;
+            --danger-color: #f44336;
+            --border-color: #e0e0e0;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            padding-bottom: 20px;
+        }
+        
+        .mobile-container {
+            padding: 0 15px;
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Стили для корзины */
+        .cart-item {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 0;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        
+        .cart-item-info {
+            flex: 1;
+            min-width: 0; /* Предотвращает переполнение */
+        }
+        
+        .cart-item-name {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .cart-item-details {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .cart-item-actions {
+            flex-shrink: 0;
+        }
+        
+        /* Стили для сетки продуктов */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 15px;
+        }
+        
+        .product-card-grid {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.3s;
+        }
+        
+        .product-card-grid:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .product-img-grid {
+            width: 100%;
+            height: 100px;
+            border-radius: 6px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        
+        .product-name-grid {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 8px;
+            height: 40px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        /* Остальные стили */
+        .empty-cart {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-style: italic;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 13px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .products-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .cart-item {
+                padding: 10px 0;
+                gap: 8px;
+            }
+            
+            .cart-item-img {
+                width: 50px;
+                height: 50px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .product-name-grid {
+                height: auto;
+                -webkit-line-clamp: 3;
+            }
+            
+            .cart-item-name {
+                white-space: normal;
+            }
+        }
         </style>
     </head>
     <body>
-        <div th:insert="~{fragments/navigate :: navigate}"></div>
+        <div th:replace="~{fragments/navigate :: navigate}"></div>
 
-        <div th:if="${message != null}" th:text="${message}" ></div>
-        <form th:action="@{/order/create}" method="post" >
-            <button type="submit" >Подтвердить заказ</button>
-        </form>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th><h1>Корзина</h1> 
-                        <form th:action="@{/order/clear}" method="post">
+        <div class="mobile-container">
+            <!-- Сообщение -->
+            <div th:if="${message != null}" class="alert alert-success" th:text="${message}" style="margin: 15px 0;"></div>
+            <!-- Корзина -->
+            <div class="section-card">
+                <div class="section-title">
+                    <span>Корзина</span>
+                    <form th:action="@{/order/clear}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Очистить</button>
+                    </form>
+                </div>
 
-                            <button type="submit" >Очистить список</button>
+                <div th:if="${positions != null and !positions.empty}">
+                    <div th:each="position : ${positions}" class="cart-item">
+                        <img th:src="@{${position.product.img}}" class="cart-item-img" th:alt="${position.product.name}">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name" th:text="${position.product.name}"></div>
+                            <div class="cart-item-details">
+                                <span th:text="${#numbers.formatDecimal(position.quantity, 1, 3) + ' кг'}"></span>
+                                <span th:if="${position.consumer != null}" th:text="' | ' + ${position.consumer}"></span>
+                            </div>
+                        </div>
+                        <div class="cart-item-actions">
+                            <form th:action="@{/order/deletePosition}" method="post">
+                                <input type="hidden" name="id" th:value="${position.id}">
+                                <button type="submit" class="btn btn-danger btn-sm">×</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${positions == null or positions.empty}" class="empty-cart">
+                    Корзина пуста
+                </div>
+
+                <div class="action-buttons" th:if="${positions != null and !positions.empty}">
+                    <form th:action="@{/order/create}" method="post">
+                        <button type="submit" class="btn btn-primary">Подтвердить заказ</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Все продукты -->
+            <div class="section-card">
+                <h3 class="section-title">Все продукты</h3>
+
+                <div class="products-grid">
+                    <div th:each="product : ${products}" class="product-card-grid">
+                        <img th:if="${product.img != null}" 
+                             th:src="@{${product.img}}" 
+                             class="product-img-grid"
+                             th:alt="${product.name}">
+                        <div th:unless="${product.img != null}" class="product-img-grid" style="background: #eee; display: flex; align-items: center; justify-content: center;">
+                            Нет фото
+                        </div>
+
+                        <div class="product-name-grid" th:text="${product.name}"></div>
+                        <div class="product-details-grid" th:text="${product.packing}"></div>
+
+                        <form th:action="@{/order/add}" method="post" th:object="${position}">
+                            <input type="hidden" name="productId" th:value="${product.id}">
+
+                            <div class="form-group-grid">
+                                <input type="number" name="quantity" step="0.001" class="form-control-grid quantity-input-grid" placeholder="Кол-во" required>
+                                <span>кг</span>
+                            </div>
+
+                            <select class="form-control-grid consumer-select-grid" th:field="*{consumer}">
+                                <option value="">Получатель</option>
+                                <option th:each="consumer : ${consumers}" 
+                                        th:value="${consumer}" 
+                                        th:text="${consumer}">
+                                </option>
+                            </select>
+
+                            <button type="submit" class="btn btn-primary btn-grid">Добавить</button>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                    </th>
-                    <th><h1>Все продукты</h1></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="vertical-align: top;">
-                        <table border="1"  >
-                            <thead>
-                                <tr>
-                                    <th><h1></h1></th>
-                                    <th><h1></h1></th>
-                                    <th><h1>кг</h1></th>
-                                    <th><h1>*</h1></th>
-                                </tr>
-                            </thead>
-                            <tr th:each="position : ${positions}">
-                                <td><img th:src="@{${position.product.img}}" class="product-img"/></td>
-                                <td th:text="${position.product.name}"></td>
-                                <td th:text="${#numbers.formatDecimal(position.quantity, 1, 3)}" ></td>
-                                <td th:text="${position.consumer}"></td>
-                                <td>
-                                    <form th:action="@{/order/deletePosition}" method="post" th:object="${position}">
-                                        <input type="hidden" name="id" th:value="${position.id}">
+        <div th:replace="~{fragments/footer-fragment :: footer-fragment}"></div>
 
-                                        <button type="submit" >Удалить</button>
-                                    </form>
-                                </td>
-                            </tr>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Валидация формы перед отправкой
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    const requiredInputs = this.querySelectorAll('[required]');
+                    let isValid = true;
 
-                        </table>
+                    requiredInputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            input.style.borderColor = '#ff4444';
+                            isValid = false;
+                        }
+                    });
 
-                    </td>
-                    <td>
-                        <table border="1">
-                            <tr th:each="product : ${products}">
-                                <td>
-                                    <img th:if="${product.img != null}" 
-                                         th:src="@{${product.img}}" 
-                                         alt="Фото продукта" 
-                                         class="product-img">
-                                    <span th:unless="${product.img != null}">Нет фото</span>
-                                </td>
-                                <td th:text="${product.name}"></td>
-                                <td th:text="${product.packing}"></td>
-                                <td> 
-                                    <form th:action="@{/order/add}" method="post" th:object="${position}">
+                    if (!isValid) {
+                        e.preventDefault();
+                        alert('Пожалуйста, заполните все обязательные поля');
+                    }
+                });
+            });
 
-                                        <input type="hidden" name="productId" th:value="${product.id}">
-
-                                        <div><label>кг</label></div>
-                                        <input type="number" name="quantity" step="0.001" style="width: 80px;" required>
-
-                                        <select   
-                                            th:field="*{consumer}" >
-                                            <option value="">*</option>
-                                            <option th:each="consumer : ${consumers}" 
-                                                    th:value="${consumer}" 
-                                                    th:text="${consumer}">
-                                            </option>
-                                        </select>
-
-
-                                        <button type="submit" >Добавить</button>
-                                    </form>
-
-
-
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-            </tbody>
-        </table>
-
-
-
-
-
-        <div th:insert="~{fragments/footer-fragment :: footer-fragment}"></div>
-
+            // Сброс цвета границы при вводе
+            document.querySelectorAll('[required]').forEach(input => {
+                input.addEventListener('input', function () {
+                    this.style.borderColor = '';
+                });
+            });
+        </script>
     </body>
 </html>

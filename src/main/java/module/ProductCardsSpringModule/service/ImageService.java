@@ -46,7 +46,10 @@ public class ImageService {
 
         // Если существует такой файл, он удаляется.        
         Path path = Paths.get(deletePath);
-        Files.delete(path);
+        if (Files.exists(path)) {
+            Files.delete(path);
+        }
+
     }
 
     // Присваевает полю продукта url изображения, если изображение передано

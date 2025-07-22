@@ -1,22 +1,151 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+    <nav th:fragment="navigate">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Мобильное меню</title>
+        <style>
+            /* Базовые стили для мобильных */
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+
+            /* Стили для навигации */
+            nav {
+                background-color: #333;
+                position: relative;
+            }
+
+            /* Стили для десктопного меню */
+            .nav-desktop ul {
+                display: flex;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .nav-desktop li {
+                flex: 1;
+                text-align: center;
+            }
+
+            .nav-desktop a {
+                color: white;
+                text-decoration: none;
+                display: block;
+                padding: 15px 10px;
+                font-size: 14px;
+            }
+
+            .nav-desktop a:hover {
+                background-color: #555;
+            }
+
+            /* Стили для мобильного меню */
+            .nav-mobile {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: none;
+                cursor: pointer;
+                padding: 15px;
+                color: white;
+                background-color: #444;
+                text-align: center;
+            }
+
+            /* Медиа-запросы для адаптации */
+            @media (max-width: 768px) {
+                .nav-desktop {
+                    display: none;
+                }
+
+                .menu-toggle {
+                    display: block;
+                }
+
+                .nav-mobile {
+                    display: none;
+                    background-color: #333;
+                }
+
+                .nav-mobile.show {
+                    display: block;
+                }
+
+                .nav-mobile ul {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                }
+
+                .nav-mobile li {
+                    border-top: 1px solid #444;
+                }
+
+                .nav-mobile a {
+                    color: white;
+                    text-decoration: none;
+                    display: block;
+                    padding: 12px 15px;
+                }
+            }
+
+            @media (min-width: 769px) {
+                .menu-toggle {
+                    display: none !important;
+                }
+
+                .nav-mobile {
+                    display: none !important;
+                }
+            }
+        </style>
+    </head>
     <body>
-        <nav th:fragment="navigate">
+
+        <!-- Кнопка меню для мобильных -->
+        <div class="menu-toggle" onclick="toggleMenu()">☰ Меню</div>
+
+        <!-- Десктопное меню -->
+        <div class="nav-desktop">
             <ul>
                 <li><a href="/">Главная</a></li>
-                <li>
-                    <a href="/products">Все Продукты</a>
-                </li>
-                <li>
-                    <a href="/addproduct">Добавить продукт</a>
-                </li>
-                <li>
-                    <a href="/order/create">Создать заказ</a>
-                </li>
-                <li>
-                    <a href="/order/showorders">Все заказы</a>
-                </li>
+                <li><a href="/products">Все Продукты</a></li>
+                <li><a href="/addproduct">Добавить продукт</a></li>
+                <li><a href="/order/create">Создать заказ</a></li>
+                <li><a href="/order/showorders">Все заказы</a></li>
             </ul>
-        </nav>
+        </div>
+
+        <!-- Мобильное меню -->
+        <div class="nav-mobile" id="mobileMenu">
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/products">Все Продукты</a></li>
+                <li><a href="/addproduct">Добавить продукт</a></li>
+                <li><a href="/order/create">Создать заказ</a></li>
+                <li><a href="/order/showorders">Все заказы</a></li>
+            </ul>
+        </div>
+
+
+        <script>
+            function toggleMenu() {
+                const menu = document.getElementById('mobileMenu');
+                menu.classList.toggle('show');
+            }
+
+            // Закрытие меню при клике на ссылку
+            document.querySelectorAll('.nav-mobile a').forEach(link => {
+                link.addEventListener('click', () => {
+                    document.getElementById('mobileMenu').classList.remove('show');
+                });
+            });
+        </script>
     </body>
+</nav>
 </html>

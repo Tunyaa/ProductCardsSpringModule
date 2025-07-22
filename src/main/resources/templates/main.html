@@ -6,9 +6,9 @@
 
     </head>
     <body>
-    <td th:text="${message}"></td>
-    <div th:replace="~{fragments/navigate :: navigate}"></div>
 
+        <div th:insert="~{fragments/navigate :: navigate}"></div>
+    <td th:text="${message}"></td>
 
 </body>
 </html>

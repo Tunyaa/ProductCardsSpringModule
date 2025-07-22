@@ -99,5 +99,12 @@ public class OrderController {
         List<PositionDTO> positions = orderService.getPositionsByOrderId(id);
         return "redirect:/order/create";
     }
+    
+    @PostMapping("/deleteorder")
+    public String deleteOrder(@ModelAttribute Order order){
+        System.out.println("&&&&&&&&&&&&&&&&&&" + order.getId());
+        orderService.deleteOrderByID(order.getId());
+        return "redirect:/order/showorders";
+    }
 
 }

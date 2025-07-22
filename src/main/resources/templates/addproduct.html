@@ -1,115 +1,161 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Добавление продукта</title>
-
-    </head>
-    <body>
-
-        <h3 class="text-center">Добавить новый продукт</h3>
-
-        <div th:replace="~{fragments/navigate :: navigate}"></div>
-        <div class="card-body">
-            <!-- Сообщение об успехе -->
-            <div th:if="${message != null}" class="alert alert-success" th:text="${message}"></div>
-
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Добавление продукта</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Мобильные стили */
+        @media (max-width: 767.98px) {
+            .mobile-form-container {
+                padding: 15px;
+            }
+            
+            .form-card {
+                border: 1px solid #e0e0e0;
+                border-radius: 10px;
+                padding: 15px;
+                margin-bottom: 20px;
+                background: white;
+            }
+            
+            .form-group-mobile {
+                margin-bottom: 12px;
+            }
+            
+            .form-label-mobile {
+                font-size: 14px;
+                font-weight: 500;
+                margin-bottom: 4px;
+                display: block;
+            }
+            
+            .form-control-mobile {
+                width: 100%;
+                padding: 8px 12px;
+                font-size: 14px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+            }
+            
+            .btn-submit-mobile {
+                width: 100%;
+                padding: 10px;
+                background-color: #28a745;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                font-weight: bold;
+            }
+            
+            .file-input-mobile {
+                font-size: 14px;
+            }
+            
+            .alert-mobile {
+                padding: 10px;
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+        }
+        
+        /* Десктопные стили */
+        @media (min-width: 768px) {
+            .mobile-form-container {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+        }
+        
+        /* Общие стили */
+        .page-title {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navigate :: navigate}"></div>
+    
+    <div class="mobile-form-container">
+        <h3 class="page-title">Добавить новый продукт</h3>
+        
+        <!-- Сообщение об успехе -->
+        <div th:if="${message != null}" class="alert alert-success alert-mobile" th:text="${message}"></div>
+        
+        <div class="form-card">
             <form th:action="@{/addproduct}" method="post" th:object="${product}" enctype="multipart/form-data">
-
                 <!-- Поле для загрузки изображения -->
-                <div>
-                    <label for="imageFile" >Изображение продукта</label>
-                    <input type="file"  name="imageFile" accept="image/*">
-                    <small >Допустимые форматы: JPG, PNG, GIF</small>
+                <div class="form-group-mobile">
+                    <label for="imageFile" class="form-label-mobile">Изображение продукта</label>
+                    <input type="file" class="form-control-mobile file-input-mobile" name="imageFile" accept="image/*">
+                    <small class="text-muted">Допустимые форматы: JPG, PNG, GIF</small>
                 </div>
-
+                
                 <!-- Название продукта -->
-                <div >
-                    <label for="name" >Название продукта</label>
-                    <input type="text"   
-                           th:field="*{name}" required>
+                <div class="form-group-mobile">
+                    <label for="name" class="form-label-mobile">Название продукта</label>
+                    <input type="text" class="form-control-mobile" id="name" th:field="*{name}" required>
                 </div>
-
+                
                 <!-- Цена -->
-                <div >
-                    <label for="description" >Цена за кг</label>
-                    <input type="text"   
-                           th:field="*{currentPrice}">
+                <div class="form-group-mobile">
+                    <label for="currentPrice" class="form-label-mobile">Цена за кг</label>
+                    <input type="number" step="0.01" class="form-control-mobile" id="currentPrice" th:field="*{currentPrice}">
                 </div>
-
+                
                 <!-- Сорт продукта -->
-                <div >
-                    <label for="variety" >Сорт продукта</label>
-                    <input type="text"   
-                           th:field="*{variety}">
+                <div class="form-group-mobile">
+                    <label for="variety" class="form-label-mobile">Сорт продукта</label>
+                    <input type="text" class="form-control-mobile" id="variety" th:field="*{variety}">
                 </div>
-
+                
                 <!-- Категория -->
-                <div >
-                    <label for="category" >Категория</label>
-                    <select   
-                        th:field="*{category}" >
+                <div class="form-group-mobile">
+                    <label for="category" class="form-label-mobile">Категория</label>
+                    <select class="form-control-mobile" id="category" th:field="*{category}">
                         <option value="">Выберите категорию</option>
-                        <option th:each="cat : ${categories}" 
-                                th:value="${cat}" 
-                                th:text="${cat}">
-                        </option>
+                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
                     </select>
                 </div>
-
+                
                 <!-- Описание -->
-                <div >
-                    <label for="description" >Описание</label>
-                    <input type="text"   
-                           th:field="*{description}">
+                <div class="form-group-mobile">
+                    <label for="description" class="form-label-mobile">Описание</label>
+                    <input type="text" class="form-control-mobile" id="description" th:field="*{description}">
                 </div>
-
-
-
+                
                 <!-- Место продажи -->
-                <div >
-                    <label for="description" >Место продажи</label>
-                    <input type="text"   
-                           th:field="*{whereBuy}">
+                <div class="form-group-mobile">
+                    <label for="whereBuy" class="form-label-mobile">Место продажи</label>
+                    <input type="text" class="form-control-mobile" id="whereBuy" th:field="*{whereBuy}">
                 </div>
-
-
-
-
+                
                 <!-- Формат упаковки -->
-                <div >
-                    <label for="description" >Формат упаковки</label>
-                    <input type="text"   
-                           th:field="*{packing}">
+                <div class="form-group-mobile">
+                    <label for="packing" class="form-label-mobile">Формат упаковки</label>
+                    <input type="text" class="form-control-mobile" id="packing" th:field="*{packing}">
                 </div>
-
+                
                 <!-- Сезонность -->
-                <div >
-                    <label for="description" >Сезонность</label>
-                    <input type="text"   
-                           th:field="*{seasonality}">
+                <div class="form-group-mobile">
+                    <label for="seasonality" class="form-label-mobile">Сезонность</label>
+                    <input type="text" class="form-control-mobile" id="seasonality" th:field="*{seasonality}">
                 </div>
-
-
-                <!-- Сезонность -->
-                <div >
-                    <label for="description" >Страна производитель</label>
-                    <input type="text"   
-                           th:field="*{country}">
+                
+                <!-- Страна производитель -->
+                <div class="form-group-mobile">
+                    <label for="country" class="form-label-mobile">Страна производитель</label>
+                    <input type="text" class="form-control-mobile" id="country" th:field="*{country}">
                 </div>
-
-
-
-
-
-
-                <button type="submit" >Добавить</button>
+                
+                <button type="submit" class="btn-submit-mobile">Добавить продукт</button>
             </form>
+        </div>
+    </div>
 
-
-
-
-    </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
