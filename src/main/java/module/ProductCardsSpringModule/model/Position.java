@@ -40,7 +40,8 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.UUID)
     public UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    // Используется EAGER так как все продукты загружаются в одном запросе и будут выведены все в списке.
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "product_id")
     private Product product;
 

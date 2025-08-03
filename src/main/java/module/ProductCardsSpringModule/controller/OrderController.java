@@ -101,7 +101,7 @@ public class OrderController {
     // Показывает позиции выбранного заказа
     @GetMapping("/setorder")
     public String setOrder(Model model, @RequestParam Long id) {
-        List<PositionDTO> positions = orderService.getPositionsByOrderId(id);
+        orderService.getPositionsByOrderId(id);
         return "redirect:/order/create";
     }
     

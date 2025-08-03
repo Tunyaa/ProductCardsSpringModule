@@ -96,7 +96,7 @@ public class OrderService {
         for (Position position : order.getPositions()) {
             PositionDTO positionDTO = new PositionDTO();
             // Создаёт DTO на основе позиции из списка позиций заказа
-            positionDTO.setId(UUID.randomUUID());
+            positionDTO.setId(position.getId());
             positionDTO.setProduct(position.getProduct());
             positionDTO.setProductId(positionDTO.getProduct().getId());
             positionDTO.setQuantity(position.getQuantity());
