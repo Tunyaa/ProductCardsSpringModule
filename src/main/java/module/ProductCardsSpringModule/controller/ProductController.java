@@ -121,7 +121,7 @@ public class ProductController {
     public String delProduct(@RequestParam Long id) {
         // Удаляет изображение затем объект из БД
         productService.deleteProduct(id);
-
+        // Продукт не может быть удалён, ели он есть в заказе
         return "redirect:/products";
     }
 }

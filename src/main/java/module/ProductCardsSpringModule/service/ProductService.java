@@ -39,9 +39,7 @@ public class ProductService {
         // Если новое изображение не передано, присваевается старый url
 //        Не передаётся url из шаблона!!!
         if (!imageFile.isEmpty()) {
-            // Если изображение меняется на новое, старое удаляется.
-            
-            System.out.println("&&&&&&&&&&&&&&&& updateProduct" );
+            // Если изображение меняется на новое, старое удаляется.            
             imageService.deleteImage(productById.getImg());
             imageService.saveImageIfExist(imageFile, productById);
         }
@@ -69,10 +67,10 @@ public class ProductService {
             productRepository.deleteById(id);
         } catch (IOException ex) {
             System.getLogger(ProductService.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }catch(Exception ex){ 
-            System.getLogger(ProductService.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (Exception ex) {
+            System.getLogger(ProductService.class.getName()).log(System.Logger.Level.ERROR, "ЭТОТ ПРОДУКТ НЕ МОЖЕТ БЫТЬ УДАЛЕН, ТАК КАК ПОЗИЦИЯ С ЭТИМ ПРОДУКТОМ УЖЕ ЕСТЬ В ЗАКАЗЕ.");
         }
-        
+
     }
 
     // Возвращает List всех продуктов
