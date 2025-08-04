@@ -70,7 +70,7 @@ public class ProductController {
 
         // Сохраняет изображение, если оно было загружено
         imageService.saveImageIfExist(imageFile, product);
-
+        System.out.println(product.getImg() + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         // Сохраняет продукт
         productService.saveProduct(product);
 

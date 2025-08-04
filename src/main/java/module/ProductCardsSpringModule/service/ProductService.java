@@ -6,6 +6,7 @@ import java.util.Optional;
 import module.ProductCardsSpringModule.model.Product;
 import module.ProductCardsSpringModule.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -29,6 +30,7 @@ public class ProductService {
     }
 
     // Изменяет продукт
+    @Transactional
     public void updateProduct(Product product, MultipartFile imageFile) throws IOException {
 
         // Получает продукт по id, из принимаемого продукта

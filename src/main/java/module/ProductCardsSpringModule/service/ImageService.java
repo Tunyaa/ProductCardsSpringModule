@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import module.ProductCardsSpringModule.model.Product;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,10 +18,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ImageService {
 
+    @Value("${app.upload.dir}")
+    private String uploadDir;
+
     // Копирует изображение в деррикторию
     private String saveImage(MultipartFile imageFile) throws IOException {
         // url куда помещать изображение
-        String uploadDir = "src/main/resources/static/images/";
+//        String uploadDir = "src/main/resources/static/images/";
+
         // Иминование изображения
         String fileName = System.currentTimeMillis() + "_" + imageFile.getOriginalFilename();
         // Создаёт путь в файловой системе
@@ -59,7 +64,7 @@ public class ImageService {
             // Изображение копируется по url
             String fileName = saveImage(imageFile);
             // url сохраняется в поле продукта
-            product.setImg("/images/" + fileName);
+            product.setImg("/" + uploadDir + fileName);
         }
     }
 }
