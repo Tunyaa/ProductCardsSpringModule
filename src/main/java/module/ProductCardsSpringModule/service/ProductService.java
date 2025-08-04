@@ -66,10 +66,13 @@ public class ProductService {
         try {
             // Удаляет изображение затем объект из БД
             imageService.deleteImage(productRepository.findById(id).get().getImg());
+            productRepository.deleteById(id);
         } catch (IOException ex) {
             System.getLogger(ProductService.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }catch(Exception ex){ 
+            System.getLogger(ProductService.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        productRepository.deleteById(id);
+        
     }
 
     // Возвращает List всех продуктов
