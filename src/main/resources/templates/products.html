@@ -1,167 +1,184 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Список продуктов</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Мобильные стили */
-        @media (max-width: 767.98px) {
-            .mobile-products-container {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-                padding: 5px;
-            }
-            
-            .mobile-product-card {
-                border: 1px solid #e0e0e0;
-                border-radius: 8px;
-                padding: 8px;
-                background: white;
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-            
-            .mobile-product-img-container {
-                height: 80px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-bottom: 5px;
-            }
-            
-            .mobile-product-img {
-                max-height: 100%;
-                max-width: 100%;
-                object-fit: contain;
-            }
-            
-            .mobile-product-name {
-                font-weight: bold;
-                font-size: 14px;
-                margin-bottom: 3px;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-            }
-            
-            .mobile-product-price {
-                font-weight: bold;
-                color: #d32f2f;
-                font-size: 15px;
-                margin: 5px 0;
-            }
-            
-            .mobile-product-details {
-                font-size: 12px;
-                color: #666;
-                margin-bottom: 3px;
-                display: -webkit-box;
-                -webkit-line-clamp: 1;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-            }
-            
-            .mobile-product-actions {
-                margin-top: auto;
-                padding-top: 5px;
-            }
-            
-            .btn-edit {
-                width: 100%;
-                padding: 3px;
-                font-size: 12px;
-            }
-        }
-        
-        /* Десктопные стили */
-        @media (min-width: 768px) {
-            .mobile-products-container {
-                display: none !important;
-            }
-            
-            .table-responsive {
-                display: block !important;
-            }
-        }
-        
-        /* Общие стили */
-        .product-img {
-            max-width: 50px;
-            max-height: 50px;
-        }
-    </style>
-</head>
-<body>
-    <div th:replace="~{fragments/navigate :: navigate}"></div>
-    <div class="container-fluid">
-        <!-- Навигация -->
-        
-        
-        <h1 class="my-3 h4">Список продуктов</h1>
+    <head>
+        <meta charset="UTF-8">
+        <title>Список продуктов</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            /* Мобильные стили */
+            @media (max-width: 767.98px) {
+                .mobile-products-container {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 10px;
+                    padding: 5px;
+                }
 
-        <!-- Десктопная версия (таблица) -->
-        <div class="table-responsive d-none d-md-block">
-            <table class="table table-striped table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th></th>
-                        <th>Продукт</th>
-                        <th>Сорт</th>
-                        <th>Категория</th>
-                        <th>Цена</th>
-                        <th>Фасовка</th>
-                        <th>Где купить</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="product : ${products}">
-                        <!-- Десктопная версия строки таблицы -->
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                .mobile-product-card {
+                    border: 1px solid #e0e0e0;
+                    border-radius: 8px;
+                    padding: 8px;
+                    background: white;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                }
 
-        <!-- Мобильная версия (карточки) -->
-        <div class="mobile-products-container">
-            <div class="mobile-product-card" th:each="product : ${products}">
-                <div class="mobile-product-img-container">
-                    <img th:if="${product.img != null}" 
-                         th:src="@{${product.img}}" 
-                         alt="Фото продукта" 
-                         class="mobile-product-img">
-                    <span th:unless="${product.img != null}" class="text-muted small">Нет фото</span>
-                </div>
-                
-                <div class="mobile-product-name" th:text="${product.name}"></div>
-                
-                <div class="mobile-product-price" th:if="${product.currentPrice} != null"
-                     th:text="${#numbers.formatDecimal(product.currentPrice, 1, 0)} + ' ₽'">
-                </div>
-                
-                <div class="mobile-product-details" 
-                     th:text="${(product.variety ?: 'Без сорта') + ' | ' + product.category}">
-                </div>
-                
-                <div class="mobile-product-details" th:text="${product.packing}"></div>
-                
-                <div class="mobile-product-actions">
-                    <form th:action="@{/setproduct}" method="get" th:if="${product.id != null}">
-                        <input type="hidden" name="id" th:value="${product.id}">
-                        <button type="submit" class="btn btn-sm btn-outline-primary btn-edit">
-                            ✎ Редакт.
-                        </button>
-                    </form>
+                .mobile-product-img-container {
+                    height: 80px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 5px;
+                }
+
+                .mobile-product-img {
+                    max-height: 100%;
+                    max-width: 100%;
+                    object-fit: contain;
+                }
+
+                .mobile-product-name {
+                    font-weight: bold;
+                    font-size: 14px;
+                    margin-bottom: 3px;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+
+                .mobile-product-price {
+                    font-weight: bold;
+                    color: #d32f2f;
+                    font-size: 15px;
+                    margin: 5px 0;
+                }
+
+                .mobile-product-details {
+                    font-size: 12px;
+                    color: #666;
+                    margin-bottom: 3px;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+
+                .mobile-product-actions {
+                    margin-top: auto;
+                    padding-top: 5px;
+                }
+
+                .btn-edit {
+                    width: 100%;
+                    padding: 3px;
+                    font-size: 12px;
+                }
+            }
+
+            /* Десктопные стили */
+            @media (min-width: 768px) {
+                .mobile-products-container {
+                    display: none !important;
+                }
+
+                .table-responsive {
+                    display: block !important;
+                }
+            }
+
+            /* Общие стили */
+            .product-img {
+                max-width: 50px;
+                max-height: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <div th:replace="~{fragments/navigate :: navigate}"></div>
+        <div class="container-fluid">
+            <!-- Навигация -->
+
+
+            <h1 class="my-3 h4">Список продуктов</h1>
+
+            <!-- Десктопная версия (таблица) -->
+            <div class="table-responsive d-none d-md-block">
+                <table class="table table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th></th>
+                            <th>Продукт</th>
+                            <th>Сорт</th>
+                            <th>Категория</th>
+                            <th>Цена</th>
+                            <th>Фасовка</th>
+                            <th>Где купить</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="product : ${products}">
+                            <!-- Десктопная версия строки таблицы -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Мобильная версия (карточки) -->
+            <div class="mobile-products-container">
+                <div class="mobile-product-card" th:each="product : ${products}">
+
+                    <a th:href="@{/pricehistory(id=${product.id}, name=${product.name}, img=${product.img})}">
+                        <div class="mobile-product-img-container">
+
+
+                            <img th:if="${product.img != null}" 
+                                 th:src="@{${product.img}}" 
+                                 alt="Фото продукта" 
+                                 class="mobile-product-img">
+
+
+                            <span th:unless="${product.img != null}" class="text-muted small">Нет фото</span>
+                        </div>
+                    </a>
+
+
+
+
+
+                    <div class="mobile-product-name" th:text="${product.name}"></div>
+
+
+
+
+                    <div class="mobile-product-price" th:if="${product.currentPrice} != null"
+                         th:text="${#numbers.formatDecimal(product.currentPrice, 1, 0)} + ' ₽'">
+                    </div>
+
+                    <div class="mobile-product-details" 
+                         th:text="${(product.variety ?: 'Без сорта') + ' | ' + product.category}">
+                    </div>
+
+                    <div class="mobile-product-details" th:text="${product.packing}"></div>
+
+
+
+
+                    <div class="mobile-product-actions">
+                        <form th:action="@{/setproduct}" method="get" th:if="${product.id != null}">
+                            <input type="hidden" name="id" th:value="${product.id}">
+                            <button type="submit" class="btn btn-sm btn-outline-primary btn-edit">
+                                ✎ Редакт.
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
 </html>

@@ -1,11 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>TODO supply a title</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>История цен</title>
+        <!-- Подключаем Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            .chart-container {
+                width: 95%;
+                margin: 1px auto;
+            }
+            .menu-toggle {
+                display: none;
+                cursor: pointer;
+                padding: 15px;
+                color: white;
+                background-color: #444;
+                text-align: center;
+            }
+
+
+        </style>
+
     </head>
     <body>
-        <div>TODO write content</div>
+
+        <div th:insert="~{fragments/navigate :: navigate}"></div>
+        <div>
+            <a class="menu-toggle" href="/products">Назад</a>
+        </div>
+        <div>
+            <img th:src="@{${product.img}}" style="max-height: 200px"/>
+            <h1>История цен для: <span th:text="${product.name}"></span></h1>
+        </div>
+
+
+
+
+        <div class="chart-container">
+            <canvas id="priceChart"></canvas>
+        </div>
+
+        <script th:inline="javascript">
+            /* Получаем данные из Thymeleaf */
+            const prices = /*[[${prices}]]*/ [];
+            const dates = /*[[${dates}]]*/ [];
+
+            /* Создаем график */
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                            label: 'Цена',
+                            data: prices,
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            fill: true
+                        }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Динамика изменения цены'
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        </script>
+
     </body>
 </html>
