@@ -2,8 +2,6 @@ package module.ProductCardsSpringModule.service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import module.ProductCardsSpringModule.model.PriceHistory;
 import module.ProductCardsSpringModule.model.Product;
 import module.ProductCardsSpringModule.repository.PriceHistoryRepository;
@@ -41,14 +39,14 @@ public class ProductService {
         // Получает продукт по id, из принимаемого продукта
         Product productById = productRepository.findById(product.getId()).orElseThrow();
 
-        // Если новое изображение не передано, присваевается старый url
+        // Если новое изображение не передано, присваивается старый url
 //        Не передаётся url из шаблона!!!
         if (!imageFile.isEmpty()) {
             // Если изображение меняется на новое, старое удаляется.            
             imageService.deleteImage(productById.getImg());
             imageService.saveImageIfExist(imageFile, productById);
         }
-        // Присваевает продукту измененные поля
+        // Присваивает продукту измененные поля
         productById.setCurrentPrice(product.getCurrentPrice());
         productById.setCountry(product.getCountry());
         productById.setCategory(product.getCategory());

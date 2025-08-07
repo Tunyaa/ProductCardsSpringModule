@@ -23,12 +23,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 public class ProductController {
 
-    private final ProductRepository productRepository; // УБРАТЬ ПОЛЕ
     private final ImageService imageService;
     private final ProductService productService;
 
-    public ProductController(ProductRepository productRepository, ImageService imageService, ProductService productService) {
-        this.productRepository = productRepository;
+    public ProductController(ImageService imageService, ProductService productService) {
         this.imageService = imageService;
         this.productService = productService;
     }
@@ -36,8 +34,6 @@ public class ProductController {
     // Показывает все продукты
     @GetMapping("/products")
     public String showProducts(Model model) {
-
-//        List<Product> products = productRepository.findAll();
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
 
