@@ -51,11 +51,11 @@ public class Product {
 
     // Метод для обновления цены и сохранением старой цены в историю
     private void updatePrice(BigDecimal newPrice) {
-        if (this.currentPrice != null) {
-          this.priceHistory.add(new PriceHistory(this, this.currentPrice)); // Создаём нувую запись цены на продукт  
-        }        
-
         currentPrice = newPrice; // Ставим актуальную цену на продукт
+        // Создаём нувую запись цены на продукт  
+        if (this.currentPrice != null) {
+            this.priceHistory.add(new PriceHistory(this, this.currentPrice));
+        }
     }
 
     public Long getId() {
@@ -144,7 +144,7 @@ public class Product {
 
     public void setCurrentPrice(BigDecimal currentPrice) {
         updatePrice(currentPrice);
-        
+
     }
 
     public List<PriceHistory> getPriceHistory() {
