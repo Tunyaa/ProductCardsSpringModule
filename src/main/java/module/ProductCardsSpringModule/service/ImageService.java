@@ -62,7 +62,7 @@ public class ImageService {
     // Присваивает полю продукта url изображения, если изображение передано
     public void saveImageIfExist(MultipartFile imageFile, Product product) throws IOException {
         // Сохраняет изображение, если оно было загружено
-        if (!imageFile.isEmpty()) {
+        if (imageFile != null && !imageFile.isEmpty()) {
             // Изображение копируется по url
             String fileName = saveImage(imageFile);
             // url сохраняется в поле продукта
@@ -85,7 +85,5 @@ public class ImageService {
     public void setImgDir(String imgDir) {
         this.imgDir = imgDir;
     }
-    
-    
-    
+
 }
