@@ -18,12 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final PriceHistoryRepository priceHistoryRepository;
     private final ImageService imageService;
 
-    public ProductService(ProductRepository productRepository, PriceHistoryRepository priceHistoryRepository, ImageService imageService) {
+    public ProductService(ProductRepository productRepository, ImageService imageService) {
         this.productRepository = productRepository;
-        this.priceHistoryRepository = priceHistoryRepository;
         this.imageService = imageService;
     }
 
@@ -86,13 +84,5 @@ public class ProductService {
     public Product findProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow();
         return product;
-    }
-
-    // Возвращает список истории цен на продукт по его id
-    public List<PriceHistory> getPriceHistoryByPriductId(Long id) {
-
-        List<PriceHistory> priceHistory = priceHistoryRepository.findAllByProductId(id);
-
-        return priceHistory;
     }
 }

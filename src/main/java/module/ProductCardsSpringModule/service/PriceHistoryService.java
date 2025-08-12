@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import module.ProductCardsSpringModule.DTO.PriceHistoryDTO;
 import module.ProductCardsSpringModule.model.PriceHistory;
+import module.ProductCardsSpringModule.repository.PriceHistoryRepository;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,14 +19,16 @@ import org.springframework.stereotype.Service;
 public class PriceHistoryService {
 
     private final ProductService productService;
+    private final PriceHistoryRepository priceHistoryRepository;
 
-    public PriceHistoryService(ProductService productService) {
+    public PriceHistoryService(ProductService productService, PriceHistoryRepository priceHistoryRepository) {
         this.productService = productService;
+        this.priceHistoryRepository = priceHistoryRepository;
     }
 
     public PriceHistoryDTO getPriceHistoryDTOById(Long id) {
 
-        List<PriceHistory> priceHistory = productService.getPriceHistoryByPriductId(id);
+        List<PriceHistory> priceHistory = this.getPriceHistoryByPriductId(id);
         PriceHistoryDTO priceHistoryDTO = new PriceHistoryDTO();
         priceHistoryDTO.setPrices(priceHistory.stream().map(PriceHistory::getPrice).collect(Collectors.toList()));
 
@@ -40,6 +43,14 @@ public class PriceHistoryService {
 
         return priceHistoryDTO;
 
+    }
+
+//     Возвращает список иfстории цен на продукт по его id
+    public List<PriceHistory> getPriceHistoryByPriductId(Long id) {
+
+        List<PriceHistory> priceHistory = priceHistoryRepository.findAllByProductId(id);
+
+        return priceHistory;
     }
 
 }
