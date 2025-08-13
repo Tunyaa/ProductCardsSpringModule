@@ -39,7 +39,7 @@ public class ProductService {
 
         // Если новое изображение не передано, присваивается старый url
 //        Не передаётся url из шаблона!!!
-        if (!imageFile.isEmpty()) {
+        if (imageFile != null && !imageFile.isEmpty()) {
             // Если изображение меняется на новое, старое удаляется.            
             imageService.deleteImage(productById.getImg());
             imageService.saveImageIfExist(imageFile, productById);
@@ -55,7 +55,7 @@ public class ProductService {
         productById.setVariety(product.getVariety());
         productById.setWhereBuy(product.getWhereBuy());
 
-        // Обновляет пробукт в БД
+        // Обновляет продукт в БД
         productRepository.save(productById);
 
     }

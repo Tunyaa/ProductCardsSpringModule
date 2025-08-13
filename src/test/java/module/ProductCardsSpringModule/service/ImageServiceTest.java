@@ -147,7 +147,7 @@ public class ImageServiceTest {
     }
 
     @Test // Ошибка не возникает, если аргумент метода null
-    void deleteImage_DeleteIfExist(@TempDir Path uploadDir) throws IOException {
+    void deleteImage_DeleteIfExist(@TempDir Path uploadDir) {
         // Настраивает сервис
         ImageService imageService = new ImageService();
         assertDoesNotThrow((Executable) () -> imageService.deleteImage(null));

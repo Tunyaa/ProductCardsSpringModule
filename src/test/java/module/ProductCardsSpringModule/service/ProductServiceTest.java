@@ -1,6 +1,8 @@
 package module.ProductCardsSpringModule.service;
 
+import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Optional;
 import module.ProductCardsSpringModule.model.Product;
 import module.ProductCardsSpringModule.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
@@ -8,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -25,20 +28,31 @@ public class ProductServiceTest {
     @InjectMocks
     private ProductService productService;
 
-    // Сохранить продукт
-    @Test
+    @Test   // Проверяет вызов метода сохранения
     void saveProduct_ShouldCallRepositorySave() {
-        // Arrange (подготовка)
+        // Подготовка объекта
         Product testProduct = new Product();
-        testProduct.setName("Test Product");
 
-        // Act (действие)
+        // Выполнение тестируемого метода
         productService.saveProduct(testProduct);
 
-        // Assert (проверка)
+        // Проверка количества вызова метода
         verify(productRepository, times(1)).save(testProduct); // Проверяем, что save вызван 1 раз
         // Дополнительная проверка: никакие другие методы репозитория не вызывались
         verifyNoMoreInteractions(productRepository);
+    }
+
+    @Test
+    void updateProduct_ShouldResetCurrentProduct() throws IOException {
+        // Подготовка мокОбъекта
+        Product mockProduct = mock(Product.class);
+        when(mockProduct.getId()).thenReturn(1L);
+        // Подготовка мока внутренний логики тестируемого метода
+        when(productRepository.findById(1L)).thenReturn(Optional.of(mockProduct));
+        // Выполнение тестируемого метода
+        productService.updateProduct(mockProduct, null);
+        // Проверка количества вызова метода
+        verify(productRepository, times(1)).save(mockProduct);
     }
 
     @Test
