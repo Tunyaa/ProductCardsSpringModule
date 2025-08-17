@@ -2,6 +2,7 @@ package module.ProductCardsSpringModule.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import module.ProductCardsSpringModule.model.PriceHistory;
 import module.ProductCardsSpringModule.model.Product;
 import module.ProductCardsSpringModule.repository.PriceHistoryRepository;
@@ -63,9 +64,12 @@ public class ProductService {
     // Удаляет продукт
     public void deleteProduct(Long id) {
         try {
-            // Удаляет изображение затем объект из БД
-            imageService.deleteImage(productRepository.findById(id).get().getImg());
-            productRepository.deleteById(id);
+            // Получает url изображения
+            String img = productRepository.findById(id).get().getImg();
+
+            // Удаляет объект из БД затем изображение  
+                productRepository.deleteById(id);
+            imageService.deleteImage(img);
         } catch (IOException ex) {
             System.getLogger(ProductService.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (Exception ex) {
@@ -73,6 +77,8 @@ public class ProductService {
         }
 
     }
+    
+    
 
     // Возвращает List всех продуктов
     public List<Product> getAllProducts() {
