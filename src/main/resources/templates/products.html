@@ -149,20 +149,22 @@
 
 
 
-                    <div class="mobile-product-name" th:text="${product.name}"></div>
+                    <div class="mobile-product-name" th:text="${product.name + ' ' + product.variety}"></div>
 
 
 
 
                     <div class="mobile-product-price" th:if="${product.currentPrice} != null"
-                         th:text="${#numbers.formatDecimal(product.currentPrice, 1, 0)} + ' ₽'">
+                         th:text="${#numbers.formatDecimal(product.currentPrice, 1, 0)} + ' ₽' + ' ' + ${product.packing}">
                     </div>
 
                     <div class="mobile-product-details" 
-                         th:text="${(product.variety ?: 'Без сорта') + ' | ' + product.category}">
+                         th:text="${product.description}">
+                    </div>
+                    <div class="mobile-product-details" 
+                         th:text="${product.country} + ' | ' + ${product.category} ">
                     </div>
 
-                    <div class="mobile-product-details" th:text="${product.packing}"></div>
 
 
 

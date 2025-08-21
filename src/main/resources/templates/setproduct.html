@@ -41,8 +41,18 @@
 
                 .btn-submit-mobile {
                     width: 100%;
-                    padding: 10px;
+                    padding: 20px;
                     background-color: #28a745;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    font-weight: bold;
+                }
+                
+                .btn-delete-mobile {
+                    width: 100%;
+                    padding: 5px;
+                    background-color: #d32f2f;
                     color: white;
                     border: none;
                     border-radius: 6px;
@@ -78,6 +88,10 @@
     </head>
     <body>
         <div th:replace="~{fragments/navigate :: navigate}"></div>
+        <div>
+            <a class="menu-toggle" href="/products">Назад</a>
+        </div>
+        
         <div class="mobile-form-container">
             <h3 class="page-title">Изменить продукт</h3>            
 
@@ -162,7 +176,7 @@
                 <div class="form-card">
                     <form th:action="@{/delproduct}" method="post" th:if="${product.id != null}">
                         <input type="hidden" name="id" th:value="${product.id}">
-                        <button type="submit" class="btn-submit-mobile">Удалить продукт</button>
+                        <button type="submit" class="btn-delete-mobile">Удалить продукт</button>
                     </form>
                 </div>
 
