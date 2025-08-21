@@ -37,6 +37,10 @@ public class ProductController {
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
 
+        // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
+        List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
+        model.addAttribute("categories", categories);
+
         return "products";
     }
 
@@ -119,5 +123,30 @@ public class ProductController {
         productService.deleteProduct(id);
         // Продукт не может быть удалён, ели он есть в заказе
         return "redirect:/products";
+    }
+
+    @GetMapping("/find_by_category")
+    public String findProductByCategory(@RequestParam String category, Model model) {
+        System.out.println(category + " - КАТЕГОРИЯ----------------------");
+        List<Product> products = productService.findProductsByCategory(category);
+
+        model.addAttribute("products", products);
+
+        // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
+        List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
+        model.addAttribute("categories", categories);
+        return "products";
+    }
+
+    @GetMapping("/find_by_productname")
+    public String findProductByProductName(@RequestParam String productName, Model model) {
+        System.out.println("&&&&&&&&&&&&&&&&&&&&&& --- " + productName);
+        List<Product> products = productService.findProductByName(productName);
+        model.addAttribute("products", products);
+
+        // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
+        List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
+        model.addAttribute("categories", categories);
+        return "products";
     }
 }

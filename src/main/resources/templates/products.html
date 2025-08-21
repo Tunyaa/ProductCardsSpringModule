@@ -94,6 +94,46 @@
                 max-width: 50px;
                 max-height: 50px;
             }
+
+            .search-container {
+                display: flex;
+                gap: 15px;
+                align-items: flex-end;
+                flex-wrap: wrap;
+            }
+
+            .search-form {
+                display: flex;
+                gap: 8px;
+            }
+
+            .form-control-mobile {
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: 14px;
+            }
+
+            .search-btn {
+                padding: 8px 16px;
+                background: #f0f0f0;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                color: #333;
+                cursor: pointer;
+                font-size: 14px;
+                transition: background-color 0.2s ease;
+            }
+
+            .search-btn:hover {
+                background: #e0e0e0;
+            }
+
+            .search-btn:active {
+                background: #d0d0d0;
+            }
+
+
         </style>
     </head>
     <body>
@@ -103,6 +143,24 @@
 
 
             <h1 class="my-3 h4">Список продуктов</h1>
+
+            <div class="search-container">
+                <form th:action="@{/find_by_productname}" method="get" class="search-form">
+                    <input type="text" class="form-control-mobile" id="productName" th:name="productName" 
+                           placeholder="Название продукта">
+                    <button type="submit" class="search-btn">поиск</button>
+                </form>
+
+                <form th:action="@{/find_by_category}" method="get" class="search-form">
+                    <select class="form-control-mobile" id="category" name="category">
+                        <option value="allCategories">Все категории</option>
+                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
+                    </select>
+                    <button type="submit" class="search-btn">поиск</button>
+                </form>
+            </div>
+
+
 
             <!-- Десктопная версия (таблица) -->
             <div class="table-responsive d-none d-md-block">

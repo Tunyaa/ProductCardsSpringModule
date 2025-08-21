@@ -1,11 +1,9 @@
 package module.ProductCardsSpringModule.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import module.ProductCardsSpringModule.model.PriceHistory;
 import module.ProductCardsSpringModule.model.Product;
-import module.ProductCardsSpringModule.repository.PriceHistoryRepository;
 import module.ProductCardsSpringModule.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +66,7 @@ public class ProductService {
             String img = productRepository.findById(id).get().getImg();
 
             // Удаляет объект из БД затем изображение  
-                productRepository.deleteById(id);
+            productRepository.deleteById(id);
             imageService.deleteImage(img);
         } catch (IOException ex) {
             System.getLogger(ProductService.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -77,8 +75,6 @@ public class ProductService {
         }
 
     }
-    
-    
 
     // Возвращает List всех продуктов
     public List<Product> getAllProducts() {
@@ -90,5 +86,27 @@ public class ProductService {
     public Product findProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow();
         return product;
+    }
+
+    public List<Product> findProductsByCategory(String category) {
+        if (category.equals("allCategories")) {
+            return getAllProducts();
+        }
+        List<Product> findProductsByCategory = productRepository.findProductsByCategory(category);
+
+        return findProductsByCategory;
+    }
+
+    public List<Product> findProductByName(String productName) {
+        List<Product> products = getAllProducts();
+        ArrayList<Product> productsByName = new ArrayList<>();
+
+        for (Product product : products) {
+            if (product.getName().toLowerCase().matches(".*" + productName.toLowerCase() + ".*")) {
+                productsByName.add(product);
+            }
+        }
+
+        return productsByName;
     }
 }
