@@ -7,6 +7,7 @@ import module.ProductCardsSpringModule.model.Order;
 import module.ProductCardsSpringModule.model.Сonsumer;
 import module.ProductCardsSpringModule.model.Position;
 import module.ProductCardsSpringModule.model.Product;
+import module.ProductCardsSpringModule.model.ProductCategories;
 import module.ProductCardsSpringModule.service.OrderService;
 import module.ProductCardsSpringModule.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -37,7 +38,9 @@ public class OrderController {
     // Отображение формы создания заказа
     @GetMapping("/create")
     public String showCreateOrderForm(
-            Model model
+            Model model,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String productName
     ) {
         // Передаёт список позиций в шаблон
         model.addAttribute("positions", orderService.getAllPositions());
@@ -47,11 +50,27 @@ public class OrderController {
 
         // Передаёт пустую позицию в шаблон
         model.addAttribute("position", new PositionDTO());
+        
+        // Передаёт адрес запроса для формы в шаблон
+        model.addAttribute("searchAction", "/order/create");
 
-        // Передаёт весь список продуктов в шаблон
-        List<Product> allProducts = productService.getAllProducts();
-        model.addAttribute("products", allProducts);
+        // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
+        List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
+        model.addAttribute("categories", categories);
 
+        // Если строка передана, выполнится поиск по категории
+        if (category != null) {
+            List<Product> products = productService.findProductsByCategory(category);
+            model.addAttribute("products", products);
+        } // Если строка передана, выполнится поиск по имени
+        else if (productName != null) {
+            List<Product> products = productService.findProductByName(productName);
+            model.addAttribute("products", products);
+        } else {
+            // Передаёт весь список продуктов в шаблон
+            List<Product> allProducts = productService.getAllProducts();
+            model.addAttribute("products", allProducts);
+        }
         return "create-order";
     }
 
@@ -104,11 +123,11 @@ public class OrderController {
         orderService.getPositionsByOrderId(id);
         return "redirect:/order/create";
     }
-    
+
     // Удаляет заказ из БД
     @PostMapping("/deleteorder")
-    public String deleteOrder(@ModelAttribute Order order){
-        
+    public String deleteOrder(@ModelAttribute Order order) {
+
         orderService.deleteOrderByID(order.getId());
         return "redirect:/order/showorders";
     }

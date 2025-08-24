@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    </head>
+    <body>
+        <nav th:fragment="productlist_fragment">
+
+
+            <!-- Мобильная версия (карточки) -->
+            <div class="mobile-products-container">
+                <div class="mobile-product-card" th:each="product : ${products}">
+
+                    <a th:href="@{/pricehistory(id=${product.id}, name=${product.name}, img=${product.img})}">
+                        <div class="mobile-product-img-container">
+
+
+                            <img th:if="${product.img != null}" 
+                                 th:src="@{${product.img}}" 
+                                 alt="Фото продукта" 
+                                 class="mobile-product-img">
+
+
+                            <span th:unless="${product.img != null}" class="text-muted small">Нет фото</span>
+                        </div>
+                    </a>
+
+
+
+
+
+                    <div class="mobile-product-name" th:text="${product.name + ' ' + product.variety}"></div>
+
+
+
+
+                    <div class="mobile-product-price" th:if="${product.currentPrice} != null"
+                         th:text="${#numbers.formatDecimal(product.currentPrice, 1, 0)} + ' ₽' + ' ' + ${product.packing}">
+                    </div>
+
+                    <div class="mobile-product-details" 
+                         th:text="${product.description}">
+                    </div>
+                    <div class="mobile-product-details" 
+                         th:text="${product.country} + ' | ' + ${product.category} ">
+                    </div>
+
+
+
+
+
+                    <div class="mobile-product-actions">
+                        <form th:action="@{/setproduct}" method="get" th:if="${product.id != null}">
+                            <input type="hidden" name="id" th:value="${product.id}">
+                            <button type="submit" class="btn btn-sm btn-outline-primary btn-edit">
+                                ✎ Редакт.
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+    </body>
+
+</html>
+
+
+

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <nav th:fragment="productlist_for_order_fragment">
+
+
+            <div class="section-card">
+                <h3 class="section-title">Все продукты</h3>
+                <!-- Поиск продуктов по имени и категории -->
+                <div th:replace="~{fragments/product_search_fragment :: product_search_fragment}"></div>
+
+                <div class="products-grid">
+                    <div th:each="product : ${products}" class="product-card-grid">
+                        <img th:if="${product.img != null}" 
+                             th:src="@{${product.img}}" 
+                             class="product-img-grid"
+                             th:alt="${product.name}">
+                        <div th:unless="${product.img != null}" class="product-img-grid" style="background: #eee; display: flex; align-items: center; justify-content: center;">
+                            Нет фото
+                        </div>
+
+
+                        <div class="product-name-grid" th:text="${product.name + ' ' + product.variety + ' ' + product.country }"></div>
+
+                        <div class="product-details-grid" th:if="${product.currentPrice} != null"
+                             th:text="${#numbers.formatDecimal(product.currentPrice, 1, 0)} + ' ₽' + ' ' + ${product.packing}">
+                        </div>
+                        <div class="product-details-grid" 
+                             th:text="${product.description}">
+                        </div>
+
+
+
+                        <form th:action="@{/order/add}" method="post" th:object="${position}">
+                            <input type="hidden" name="productId" th:value="${product.id}">
+
+                            <div class="form-group-grid">
+                                <input type="number" name="quantity" step="0.001" class="form-control-grid quantity-input-grid" placeholder="Кол-во" required>
+                                <span>кг</span>
+                            </div>
+
+                            <select class="form-control-grid consumer-select-grid" th:field="*{consumer}">
+                                <option value="">Получатель</option>
+                                <option th:each="consumer : ${consumers}" 
+                                        th:value="${consumer}" 
+                                        th:text="${consumer}">
+                                </option>
+                            </select>
+
+                            <button type="submit" class="btn btn-primary btn-grid">Добавить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+    </body>
+</html>

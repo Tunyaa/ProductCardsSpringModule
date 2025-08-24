@@ -33,13 +33,30 @@ public class ProductController {
 
     // Показывает все продукты
     @GetMapping("/products")
-    public String showProducts(Model model) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-
+    public String showProducts(
+            Model model,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String productName
+    ) {
+        // Передаёт адрес запроса для формы в шаблон
+        model.addAttribute("searchAction", "/products");
         // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
         List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);
+
+        // Если строка передана, выполнится поиск по категории
+        if (category != null) {
+            List<Product> products = productService.findProductsByCategory(category);
+            model.addAttribute("products", products);
+        } // Если строка передана, выполнится поиск по имени
+        else if (productName != null) {
+            List<Product> products = productService.findProductByName(productName);
+            model.addAttribute("products", products);
+        } else {
+            // Передаёт весь список продуктов в шаблон
+            List<Product> allProducts = productService.getAllProducts();
+            model.addAttribute("products", allProducts);
+        }
 
         return "products";
     }
@@ -125,28 +142,4 @@ public class ProductController {
         return "redirect:/products";
     }
 
-    @GetMapping("/find_by_category")
-    public String findProductByCategory(@RequestParam String category, Model model) {
-        System.out.println(category + " - КАТЕГОРИЯ----------------------");
-        List<Product> products = productService.findProductsByCategory(category);
-
-        model.addAttribute("products", products);
-
-        // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
-        List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
-        model.addAttribute("categories", categories);
-        return "products";
-    }
-
-    @GetMapping("/find_by_productname")
-    public String findProductByProductName(@RequestParam String productName, Model model) {
-        System.out.println("&&&&&&&&&&&&&&&&&&&&&& --- " + productName);
-        List<Product> products = productService.findProductByName(productName);
-        model.addAttribute("products", products);
-
-        // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
-        List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
-        model.addAttribute("categories", categories);
-        return "products";
-    }
 }

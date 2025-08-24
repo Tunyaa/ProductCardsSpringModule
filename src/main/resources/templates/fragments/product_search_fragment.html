@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    </head>
+    <body>
+        <nav th:fragment="product_search_fragment">
+
+            <!-- Поиск по названию и по категории-->
+            <div class="search-container">
+                <form th:action="@{${searchAction}}" method="get" class="search-form">
+                    <input type="text" class="form-control-mobile" id="productName" th:name="productName" 
+                           placeholder="Название продукта">
+                    <button type="submit" class="search-btn">поиск</button>
+                </form>
+
+                <form th:action="@{${searchAction}}" method="get" class="search-form">
+                    <select class="form-control-mobile" id="category" name="category">
+                        <option value="allCategories">Все категории</option>
+                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
+                    </select>
+                    <button type="submit" class="search-btn">поиск</button>
+                </form>
+            </div>
+
+        </nav>
+    </body>
+
+</html>
+
+
+
