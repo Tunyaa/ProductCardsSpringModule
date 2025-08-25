@@ -4,64 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title></title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-            }
-
-            .products-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 10px;
-                padding: 15px;
-            }
-
-            .product-card {
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                padding: 10px;
-                text-align: center;
-                transition: transform 0.2s;
-            }
-
-            .product-card:hover {
-                transform: scale(1.02);
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            }
-
-            .product-card a {
-                text-decoration: none;
-                color: #333;
-                display: block;
-            }
-
-            .product-id {
-                font-weight: bold;
-                font-size: 14px;
-            }
-
-            .product-date {
-                font-size: 12px;
-                color: #666;
-            }
-
-            .cart-item-actions {
-                flex-shrink: 0;
-            }
-
-            .cart-item {
-                padding: 10px 0;
-                gap: 8px;
-            }
-
-            @media (max-width: 600px) {
-                .products-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                }
-            }
-        </style>
+       
     </head>
     <body>
         <div th:insert="~{fragments/navigate :: navigate}"></div>

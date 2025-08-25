@@ -45,7 +45,7 @@ public class PriceHistoryService {
 
     }
 
-//     Возвращает список иfстории цен на продукт по его id
+//     Возвращает список истории цен на продукт по его id
     public List<PriceHistory> getPriceHistoryByPriductId(Long id) {
 
         List<PriceHistory> priceHistory = priceHistoryRepository.findAllByProductId(id);
