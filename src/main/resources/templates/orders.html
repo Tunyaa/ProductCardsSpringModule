@@ -68,11 +68,15 @@
 
         <div class="products-grid">
             <div class="product-card" th:each="order : ${orders}">
-                <a th:href="@{/order/setorder(id=${order.id})}">
+                <a th:href="@{/execute/execute_order(id=${order.id})}">
                     <div class="product-id">Заказ #<span th:text="${order.id}"></span></div>
                     <div class="product-date" th:text="${#temporals.format(order.createdAt, 'dd.MM.yy HH:mm')}"></div>
 
                     <span class="cart-item-actions">
+                        <form th:action="@{/order/setorder(id=${order.id})}" method="get" th:object="${order}">
+                            <input type="hidden" name="id" th:value="${order.id}">
+                            <button type="submit" class="btn btn-danger btn-sm">Изменить</button>
+                        </form>
                         <form th:action="@{/order/deleteorder}" method="post" th:object="${order}">
                             <input type="hidden" name="id" th:value="${order.id}">
                             <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
