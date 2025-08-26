@@ -1,6 +1,7 @@
 package module.ProductCardsSpringModule.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,25 +123,29 @@ public class OrderService {
     }
 
     public void updateExecutePosition(PositionDTO position) {
-        System.out.println("1");
-        if (position.getPurchaseAmount() == null) {
-            BigDecimal multiply = position.getBuyingPrice().multiply(BigDecimal.valueOf(position.getPurchasedQuantity()));
-            position.setPurchaseAmount(multiply);
+
+        if (position.getPurchaseAmount() == null && position.getBuyingPrice() != null) {
+            BigDecimal purchaseAmount = position.getBuyingPrice().multiply(BigDecimal.valueOf(position.getPurchasedQuantity()));
+            position.setPurchaseAmount(purchaseAmount);
+        } else if (position.getBuyingPrice() == null && position.getPurchaseAmount() != null) {
+            BigDecimal valueOf = BigDecimal.valueOf(position.getPurchasedQuantity());
+            BigDecimal buyingPrice = position.getPurchaseAmount().divide(valueOf, 2, RoundingMode.HALF_UP);
+            position.setBuyingPrice(buyingPrice);
         }
-        System.out.println("2");
+
         updatePosition(position);
     }
 
     public void updatePosition(PositionDTO positionDTO) {
-        System.out.println("3");
+
         Position position = positionRepository.findById(positionDTO.getId()).orElseThrow();
-        System.out.println("4");
+
         position.setBuyingPrice(positionDTO.getBuyingPrice());
         position.setPurchasedQuantity(positionDTO.getPurchasedQuantity());
         position.setPurchaseAmount(positionDTO.getPurchaseAmount());
         position.setComment(positionDTO.getComment());
         position.setPurchased(true);
-        System.out.println("5");
+
         positionRepository.save(position);
 
     }
