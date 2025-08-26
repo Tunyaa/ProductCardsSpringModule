@@ -10,6 +10,7 @@ import java.util.UUID;
 import module.ProductCardsSpringModule.DTO.PositionDTO;
 import module.ProductCardsSpringModule.model.Order;
 import module.ProductCardsSpringModule.model.Position;
+import module.ProductCardsSpringModule.model.Product;
 import module.ProductCardsSpringModule.repository.OrderRepository;
 import module.ProductCardsSpringModule.repository.PositionRepository;
 import module.ProductCardsSpringModule.repository.ProductRepository;
@@ -24,9 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private List<PositionDTO> positions;
+    private Long currentOrderId;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final PositionRepository positionRepository;
+
+    
 
     public OrderService(OrderRepository orderRepository, ProductRepository productRepository, PositionRepository positionRepository) {
         this.orderRepository = orderRepository;
@@ -113,7 +117,7 @@ public class OrderService {
             // Добавляет DTO в список
             positions.add(positionDTO);
         }
-
+        setCurrentOrderId(id);
         return positions;
     }
 
@@ -148,6 +152,26 @@ public class OrderService {
 
         positionRepository.save(position);
 
+    }
+
+    public List<Position> findByOrderIdAndProductCategory(String category) {
+        if (category.equals("allCategories")) {
+            // Сделать возвращение всех позиций
+            List<Position> positions = positionRepository.findByOrderIdAndProductCategory(getCurrentOrderId(), category);
+            return positions;
+        } else {
+            List<Position> positions = positionRepository.findByOrderIdAndProductCategory(getCurrentOrderId(), category);
+            return positions;
+        }
+
+    }
+
+    public Long getCurrentOrderId() {
+        return currentOrderId;
+    }
+
+    public void setCurrentOrderId(Long currentOrderId) {
+        this.currentOrderId = currentOrderId;
     }
 
 }

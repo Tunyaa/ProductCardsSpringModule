@@ -5,9 +5,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title></title>
         <link rel="stylesheet" th:href="@{/css/execute_order.css}">
+        <link rel="stylesheet" th:href="@{/css/product_search_fragment.css}">
     </head>
     <body>
         <div th:insert="~{fragments/navigate :: navigate}"></div>
+        <div th:replace="~{fragments/product_search_fragment :: product_search_fragment}"></div>
+        
 
         <div >
             <div  th:each="position : ${positions}">
