@@ -1,5 +1,7 @@
 package module.ProductCardsSpringModule.DTO;
 
+import jakarta.persistence.Column;
+import java.math.BigDecimal;
 import java.util.UUID;
 import module.ProductCardsSpringModule.model.Product;
 
@@ -18,6 +20,16 @@ public class PositionDTO {
     private double quantity;
 
     private String consumer;
+
+    private BigDecimal buyingPrice;
+
+    private double purchasedQuantity;
+
+    private BigDecimal purchaseAmount;
+
+    private Boolean purchased;
+
+    private String comment;
 
     public UUID getId() {
         return id;
@@ -57,6 +69,46 @@ public class PositionDTO {
 
     public void setConsumer(String consumer) {
         this.consumer = consumer;
+    }
+
+    public BigDecimal getBuyingPrice() {
+        return buyingPrice;
+    }
+
+    public void setBuyingPrice(BigDecimal buyingPrice) {
+        this.buyingPrice = buyingPrice;
+    }
+
+    public double getPurchasedQuantity() {
+        return purchasedQuantity;
+    }
+
+    public void setPurchasedQuantity(double purchasedQuantity) {
+        this.purchasedQuantity = purchasedQuantity;
+    }
+
+    public BigDecimal getPurchaseAmount() {
+        return purchaseAmount;
+    }
+
+    public void setPurchaseAmount(BigDecimal purchaseAmount) {
+        this.purchaseAmount = purchaseAmount;
+    }
+
+    public Boolean getPurchased() {
+        return purchased;
+    }
+
+    public void setPurchased(Boolean purchased) {
+        this.purchased = purchased;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
 }

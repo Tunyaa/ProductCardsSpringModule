@@ -1,5 +1,6 @@
 package module.ProductCardsSpringModule.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private List<PositionDTO> positions;
-    public final OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final PositionRepository positionRepository;
 
-    public OrderService(OrderRepository orderRepository, ProductRepository productRepository) {
+    public OrderService(OrderRepository orderRepository, ProductRepository productRepository, PositionRepository positionRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
+        this.positionRepository = positionRepository;
         this.positions = new ArrayList<>();
     }
 
@@ -101,16 +104,45 @@ public class OrderService {
             positionDTO.setProductId(positionDTO.getProduct().getId());
             positionDTO.setQuantity(position.getQuantity());
             positionDTO.setConsumer(position.getConsumer());
+            positionDTO.setBuyingPrice(position.getBuyingPrice());
+            positionDTO.setPurchasedQuantity(position.getPurchasedQuantity());
+            positionDTO.setPurchaseAmount(position.getPurchaseAmount());
+            positionDTO.setPurchased(position.isPurchased());
+            positionDTO.setComment(position.getComment());
             // Добавляет DTO в список
             positions.add(positionDTO);
         }
-        
+
         return positions;
     }
 
     // Удаляет заказ по id
     public void deleteOrderByID(Long id) {
         orderRepository.deleteById(id);
+    }
+
+    public void updateExecutePosition(PositionDTO position) {
+        System.out.println("1");
+        if (position.getPurchaseAmount() == null) {
+            BigDecimal multiply = position.getBuyingPrice().multiply(BigDecimal.valueOf(position.getPurchasedQuantity()));
+            position.setPurchaseAmount(multiply);
+        }
+        System.out.println("2");
+        updatePosition(position);
+    }
+
+    public void updatePosition(PositionDTO positionDTO) {
+        System.out.println("3");
+        Position position = positionRepository.findById(positionDTO.getId()).orElseThrow();
+        System.out.println("4");
+        position.setBuyingPrice(positionDTO.getBuyingPrice());
+        position.setPurchasedQuantity(positionDTO.getPurchasedQuantity());
+        position.setPurchaseAmount(positionDTO.getPurchaseAmount());
+        position.setComment(positionDTO.getComment());
+        position.setPurchased(true);
+        System.out.println("5");
+        positionRepository.save(position);
+
     }
 
 }

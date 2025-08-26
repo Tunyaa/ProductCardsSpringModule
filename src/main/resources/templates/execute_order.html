@@ -4,12 +4,77 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title></title>
-       
+   <link rel="stylesheet" th:href="@{/css/execute_order.css}">
     </head>
     <body>
         <div th:insert="~{fragments/navigate :: navigate}"></div>
 
-        <h1>E O</h1>
+        <div >
+            <div  th:each="position : ${positions}">
+
+
+                <div >
+
+                    <img th:src="@{${position.product.img}}" style="max-width: 300px; max-height: 200px;"  th:alt="${position.product.name}" >
+
+                    <div  th:text="${position.product.name + ' ' + position.product.variety + ' '+ position.product.country}"></div>
+                    <div  th:text="${position.quantity}"></div>
+                    <div  th:text="${position.consumer}"></div>
+                    <div  th:text="${position.purchased}"></div>
+                    <div  th:text="${position.purchaseAmount}">rr</div>
+                    <form th:action="@{/execute/switch_checkbox}" method="post"  >
+                        <input type="hidden" name="id" th:value="${position.id}">
+                        <div >
+                            <input  type="checkbox" 
+                                    th:checked="${position.purchased}"
+                                    onchange="this.form.submit()">
+                        </div>
+                    </form>
+
+
+                    <form th:action="@{/execute/update(orderId=${orderId})}" method="post" th:object="${position}">
+                        <input type="hidden" name="id" th:value="${position.id}">
+                        <input type="hidden" name="orderId" th:value="${orderId}">
+                        <div >
+
+                            <input type="number" name="buyingPrice"  placeholder="Цена руб/кг" required
+                                   th:value="${position.buyingPrice != null} ? ${position.buyingPrice} : ''">
+                            <span >Цена руб/кг</span>
+
+                        </div>
+                        <div >
+
+                            <input type="number" name="purchasedQuantity" step="0.001" placeholder="Вес кг" required
+                                   th:value="${position.purchasedQuantity > 0} ? ${position.purchasedQuantity} : ''">
+                            <span>Вес кг</span>
+                        </div>
+                        <div >
+                            <input type="number" name="purchaseAmount" placeholder="Сумма"
+                                   th:value="${position.purchaseAmount != null} ? ${position.purchaseAmount} : ''">
+                            <span>Сумма</span>
+                        </div>
+
+
+
+                        <button type="submit" >Сохранить</button>
+                    </form>
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+
 
         <div th:insert="~{fragments/footer-fragment :: footer-fragment}"></div>
     </body>

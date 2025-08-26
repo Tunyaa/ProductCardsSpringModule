@@ -1,5 +1,6 @@
 package module.ProductCardsSpringModule.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +11,9 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import java.math.BigDecimal;
 import java.util.UUID;
+import org.springframework.lang.Nullable;
 
 /**
  *
@@ -49,6 +52,20 @@ public class Position {
 
     private String consumer;
 
+    @Column(precision = 19, scale = 0)
+    private BigDecimal buyingPrice;
+    
+    @Column(nullable = true) // не обязательно, по умолчанию true
+    private double purchasedQuantity;
+
+    @Column(precision = 19, scale = 0)
+    private BigDecimal purchaseAmount;
+
+    @Column(nullable = true) // не обязательно, по умолчанию true
+    private Boolean purchased = false;
+
+    private String comment;
+
     public UUID getId() {
         return id;
     }
@@ -80,5 +97,47 @@ public class Position {
     public void setProduct(Product product) {
         this.product = product;
     }
+
+    public BigDecimal getBuyingPrice() {
+        return buyingPrice;
+    }
+
+    public void setBuyingPrice(BigDecimal buyingPrice) {
+        this.buyingPrice = buyingPrice;
+    }
+
+    public double getPurchasedQuantity() {
+        return purchasedQuantity;
+    }
+
+    public void setPurchasedQuantity(double purchasedQuantity) {
+        this.purchasedQuantity = purchasedQuantity;
+    }
+
+    public BigDecimal getPurchaseAmount() {
+        return purchaseAmount;
+    }
+
+    public void setPurchaseAmount(BigDecimal purchaseAmount) {
+        this.purchaseAmount = purchaseAmount;
+    }
+
+    public boolean isPurchased() {
+        return purchased;
+    }
+
+    public void setPurchased(boolean purchased) {
+        this.purchased = purchased;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    
 
 }

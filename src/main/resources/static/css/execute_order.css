@@ -1,1 +1,117 @@
+.positions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
 
+.position-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.position-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 12px;
+}
+
+.position-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.position-info {
+    flex: 1;
+}
+
+.position-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 4px;
+    color: #333;
+}
+
+.position-details {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 3px;
+}
+
+.position-forms {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.checkbox-label {
+    font-size: 14px;
+    color: #333;
+}
+
+.submit-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background: #45a049;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .position-forms {
+        grid-template-columns: 1fr;
+    }
+    
+    .position-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .position-image {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
