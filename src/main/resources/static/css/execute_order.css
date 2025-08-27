@@ -1,117 +1,195 @@
 .positions-container {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    padding: 15px;
-    max-height: 80vh;
-    overflow-y: auto;
+    gap: 8px;
+    padding: 12px;
+    max-width: 100%;
 }
 
 .position-card {
     background: white;
     border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 80px;
 }
 
 .position-image {
     width: 60px;
     height: 60px;
     object-fit: cover;
-    border-radius: 8px;
-    margin-right: 12px;
-}
-
-.position-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
+    border-radius: 4px;
+    flex-shrink: 0;
 }
 
 .position-info {
     flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.position-name {
+.product-name {
     font-weight: 600;
-    font-size: 16px;
-    margin-bottom: 4px;
+    font-size: 14px;
     color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-details {
+    font-size: 12px;
+    color: #666;
 }
 
 .position-details {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 3px;
+    font-size: 11px;
+    color: #888;
 }
 
-.position-forms {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-top: 12px;
-}
-
-.form-group {
+.position-actions {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-}
-
-.form-input {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-.form-label {
-    font-size: 12px;
-    color: #666;
-    font-weight: 500;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
 }
 
 .checkbox-container {
     display: flex;
     align-items: center;
+    gap: 6px;
+    font-size: 12px;
+}
+
+.checkbox-container input[type="checkbox"] {
+    margin: 0;
+    transform: scale(0.9);
+}
+
+.form-row {
+    display: flex;
     gap: 8px;
-    margin: 10px 0;
+    align-items: end;
 }
 
-.checkbox-label {
-    font-size: 14px;
-    color: #333;
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 80px;
 }
 
-.submit-btn {
+.input-group input {
+    padding: 4px 6px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input-label {
+    font-size: 10px;
+    color: #666;
+    font-weight: 500;
+    text-align: center;
+}
+
+.save-btn {
     background: #4CAF50;
     color: white;
     border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
+    padding: 4px 10px;
+    border-radius: 3px;
     cursor: pointer;
-    font-size: 14px;
-    margin-top: 10px;
+    font-size: 12px;
+    height: 26px;
+    white-space: nowrap;
 }
 
-.submit-btn:hover {
+.save-btn:hover {
     background: #45a049;
 }
 
-/* Адаптивность */
+/* Мобильная версия */
 @media (max-width: 768px) {
-    .position-forms {
-        grid-template-columns: 1fr;
-    }
-    
-    .position-header {
-        flex-direction: column;
-        align-items: flex-start;
+    .position-card {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 8px;
     }
     
     .position-image {
-        margin-right: 0;
-        margin-bottom: 10px;
+        width: 50px;
+        height: 50px;
+        order: 1;
+    }
+    
+    .position-info {
+        order: 2;
+        flex: 2;
+    }
+    
+    .position-actions {
+        order: 3;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .checkbox-container {
+        order: 1;
+    }
+    
+    .form-row {
+        order: 2;
+        gap: 6px;
+    }
+    
+    .input-group {
+        min-width: 70px;
+    }
+    
+    .input-group input {
+        padding: 3px 5px;
+        font-size: 11px;
+    }
+    
+    .save-btn {
+        padding: 3px 8px;
+        font-size: 11px;
+    }
+}
+
+/* Десктопная версия */
+@media (min-width: 769px) {
+    .positions-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .position-card {
+        min-height: 70px;
+    }
+    
+    .position-image {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .form-row {
+        gap: 10px;
+    }
+    
+    .input-group {
+        min-width: 90px;
     }
 }
