@@ -37,7 +37,7 @@ public class ExecuteOrderController {
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String productName,
-            @RequestParam(required = false) String purchased
+            @RequestParam(required = false) String purchaseStatus
     ) {
 
         // Если строка передана, выполнится поиск по категории
@@ -49,10 +49,10 @@ public class ExecuteOrderController {
             System.out.println("prodName - " + productName);
             List<PositionDTO> positions = orderService.findPositionsByProductName(productName);
             model.addAttribute("positions", positions);
-        } else {
-            // Передаёт весь список продуктов в шаблон
-//            List<Product> allProducts = productService.getAllProducts();
-//            model.addAttribute("products", allProducts);
+        } else if (purchaseStatus != null) {
+            // Передаёт весь список продуктов(куплены\не куплены\все) в шаблон
+            List<PositionDTO> positions = orderService.findPositionsByPurchaseStatus(purchaseStatus);
+            model.addAttribute("positions", positions);
         }
 
         if (id != null) {

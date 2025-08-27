@@ -23,13 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class OrderService {
-    
+
     private List<PositionDTO> positions;
     private Long currentOrderId;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final PositionRepository positionRepository;
-    
+
     public OrderService(OrderRepository orderRepository, ProductRepository productRepository, PositionRepository positionRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
@@ -45,7 +45,7 @@ public class OrderService {
         position.setId(UUID.randomUUID());
         // Добавляет позицию в список
         positions.add(position);
-        
+
     }
 
     // Возвращает List позиций
@@ -57,15 +57,15 @@ public class OrderService {
     public void clearPositions() {
         positions.clear();
     }
-    
+
     public Long getCurrentOrderId() {
         return currentOrderId;
     }
-    
+
     public void setCurrentOrderId(Long currentOrderId) {
         this.currentOrderId = currentOrderId;
     }
-    
+
     @Transactional
     public void createOrder() {
         // Создается новый заказ, куда помещяется текущий список позиций и сохраняется в БД
@@ -109,9 +109,9 @@ public class OrderService {
             id = getCurrentOrderId();
         }
         Order order = orderRepository.findById(id).orElseThrow();
-        
+
         List<PositionDTO> positions = positionsToPositionsDTO(order.getPositions());
-        
+
         setCurrentOrderId(id);
         return positions;
     }
@@ -120,9 +120,9 @@ public class OrderService {
     public void deleteOrderByID(Long id) {
         orderRepository.deleteById(id);
     }
-    
+
     public void updateExecutePosition(PositionDTO position) {
-        
+
         if (position.getPurchaseAmount() == null && position.getBuyingPrice() != null) {
             BigDecimal purchaseAmount = position.getBuyingPrice().multiply(BigDecimal.valueOf(position.getPurchasedQuantity()));
             position.setPurchaseAmount(purchaseAmount);
@@ -131,24 +131,24 @@ public class OrderService {
             BigDecimal buyingPrice = position.getPurchaseAmount().divide(valueOf, 2, RoundingMode.HALF_UP);
             position.setBuyingPrice(buyingPrice);
         }
-        
+
         updatePosition(position);
     }
-    
+
     public void updatePosition(PositionDTO positionDTO) {
-        
+
         Position position = positionRepository.findById(positionDTO.getId()).orElseThrow();
-        
+
         position.setBuyingPrice(positionDTO.getBuyingPrice());
         position.setPurchasedQuantity(positionDTO.getPurchasedQuantity());
         position.setPurchaseAmount(positionDTO.getPurchaseAmount());
         position.setComment(positionDTO.getComment());
         position.setPurchased(true);
-        
+
         positionRepository.save(position);
-        
+
     }
-    
+
     public List<PositionDTO> findPositionsByProductCategory(String category) {
         if (category.equals("allCategories")) {
             // Сделать возвращение всех позиций
@@ -159,13 +159,13 @@ public class OrderService {
             List<PositionDTO> positionsToPositionsDTO = positionsToPositionsDTO(positions);
             return positionsToPositionsDTO;
         }
-        
+
     }
-    
+
     private List<PositionDTO> positionsToPositionsDTO(List<Position> positions) {
         clearPositions();
         for (Position position : positions) {
-            
+
             PositionDTO positionDTO = new PositionDTO();
             // Создаёт DTO на основе позиции из списка позиций заказа
             positionDTO.setId(position.getId());
@@ -180,15 +180,15 @@ public class OrderService {
             positionDTO.setComment(position.getComment());
             // Добавляет DTO в список
             this.positions.add(positionDTO);
-            
+
         }
         return this.positions;
     }
-    
+
     public List<PositionDTO> findPositionsByProductName(String productName) {
         // Загружает полный список заказа
         List<PositionDTO> positions = getPositionsByOrderId(currentOrderId);
-        System.out.println("prodName - " + productName);
+
         ArrayList<PositionDTO> positionsByName = new ArrayList<>();
         // Фильтрует позиции соответствующие запросу
         for (PositionDTO position : positions) {
@@ -198,14 +198,37 @@ public class OrderService {
                 positionsByName.add(position);
             }
         }
-        
+
         System.out.println("len - " + positionsByName.size());
         for (PositionDTO positionDTO : positionsByName) {
             System.out.println(positionDTO.getProduct().getName());
         }
-        
+
         return positionsByName;
-        
+
     }
-    
+
+    public List<PositionDTO> findPositionsByPurchaseStatus(String purchaseStatusString) {
+        // Загружает полный список заказа
+        List<PositionDTO> positions = getPositionsByOrderId(currentOrderId);
+        System.out.println(" status - " + purchaseStatusString);
+        if (purchaseStatusString.equals("all")) {
+            System.out.println("all");
+            return positions;
+        }
+        List<PositionDTO> positionsByPurchaseStatus = new ArrayList<>();
+        boolean purchaseStatusBoolean = purchaseStatusString.equals("purchased") ? true : false;
+        // Фильтрует позиции соответствующие запросу
+        for (PositionDTO position : positions) {
+            System.out.println("position.getPurchased() -" + position.getPurchased() + " - purchaseStatusBoolean - " + purchaseStatusBoolean);
+
+            if (position.getPurchased() == purchaseStatusBoolean) {
+                System.out.println("Add");
+                positionsByPurchaseStatus.add(position);
+            }
+        }
+
+        return positionsByPurchaseStatus;
+    }
+
 }

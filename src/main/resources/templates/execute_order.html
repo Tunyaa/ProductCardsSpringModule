@@ -10,7 +10,20 @@
     <body>
         <div th:insert="~{fragments/navigate :: navigate}"></div>
         <div th:replace="~{fragments/product_search_fragment :: product_search_fragment}"></div>
-        
+
+        <div>
+            <form th:action="@{${searchAction}}" method="get" class="search-form">
+
+
+                <select class="form-control-mobile" id="purchaseStatus" name="purchaseStatus">
+                    <option value="all">Все</option>
+                    <option value="purchased">Куплено</option>
+                    <option value="notPurchased">Не куплено</option>
+                </select>
+
+                <button type="submit" class="search-btn">поиск</button>
+            </form>
+        </div>
 
         <div >
             <div  th:each="position : ${positions}">
