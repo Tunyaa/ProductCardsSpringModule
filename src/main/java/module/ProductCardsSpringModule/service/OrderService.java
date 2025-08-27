@@ -30,8 +30,6 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final PositionRepository positionRepository;
 
-    
-
     public OrderService(OrderRepository orderRepository, ProductRepository productRepository, PositionRepository positionRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
@@ -58,6 +56,14 @@ public class OrderService {
     // Очищает List позиций
     public void clearPositions() {
         positions.clear();
+    }
+
+    public Long getCurrentOrderId() {
+        return currentOrderId;
+    }
+
+    public void setCurrentOrderId(Long currentOrderId) {
+        this.currentOrderId = currentOrderId;
     }
 
     @Transactional
@@ -97,26 +103,31 @@ public class OrderService {
 
     // Возвращает список позиций заказа по id заказа
     public List<PositionDTO> getPositionsByOrderId(Long id) {
-        // Загружает заказ по id из БД, очищает список.
-        Order order = orderRepository.findById(id).orElseThrow();
-        clearPositions();
-
-        for (Position position : order.getPositions()) {
-            PositionDTO positionDTO = new PositionDTO();
-            // Создаёт DTO на основе позиции из списка позиций заказа
-            positionDTO.setId(position.getId());
-            positionDTO.setProduct(position.getProduct());
-            positionDTO.setProductId(positionDTO.getProduct().getId());
-            positionDTO.setQuantity(position.getQuantity());
-            positionDTO.setConsumer(position.getConsumer());
-            positionDTO.setBuyingPrice(position.getBuyingPrice());
-            positionDTO.setPurchasedQuantity(position.getPurchasedQuantity());
-            positionDTO.setPurchaseAmount(position.getPurchaseAmount());
-            positionDTO.setPurchased(position.isPurchased());
-            positionDTO.setComment(position.getComment());
-            // Добавляет DTO в список
-            positions.add(positionDTO);
+        // Загружает заказ по id из БД, очищает список
+        // Если id не передан, то загружается список по номеру из текущего заказа
+        if (id == null) {
+            id = getCurrentOrderId();
         }
+        Order order = orderRepository.findById(id).orElseThrow();
+        
+//        clearPositions();
+        List<PositionDTO> positions = positionsToPositionsDTO(order.getPositions());
+//        for (Position position : order.getPositions()) {
+//            PositionDTO positionDTO = new PositionDTO();
+//            // Создаёт DTO на основе позиции из списка позиций заказа
+//            positionDTO.setId(position.getId());
+//            positionDTO.setProduct(position.getProduct());
+//            positionDTO.setProductId(positionDTO.getProduct().getId());
+//            positionDTO.setQuantity(position.getQuantity());
+//            positionDTO.setConsumer(position.getConsumer());
+//            positionDTO.setBuyingPrice(position.getBuyingPrice());
+//            positionDTO.setPurchasedQuantity(position.getPurchasedQuantity());
+//            positionDTO.setPurchaseAmount(position.getPurchaseAmount());
+//            positionDTO.setPurchased(position.isPurchased());
+//            positionDTO.setComment(position.getComment());
+//            // Добавляет DTO в список
+//            positions.add(positionDTO);
+//        }
         setCurrentOrderId(id);
         return positions;
     }
@@ -154,24 +165,40 @@ public class OrderService {
 
     }
 
-    public List<Position> findByOrderIdAndProductCategory(String category) {
+    public List<PositionDTO> findByOrderIdAndProductCategory(String category) {
         if (category.equals("allCategories")) {
             // Сделать возвращение всех позиций
-            List<Position> positions = positionRepository.findByOrderIdAndProductCategory(getCurrentOrderId(), category);
-            return positions;
+            List<PositionDTO> positionsByOrderId = getPositionsByOrderId(currentOrderId);
+            return positionsByOrderId;
         } else {
             List<Position> positions = positionRepository.findByOrderIdAndProductCategory(getCurrentOrderId(), category);
-            return positions;
+            List<PositionDTO> positionsToPositionsDTO = positionsToPositionsDTO(positions);
+            return positionsToPositionsDTO;
         }
 
     }
 
-    public Long getCurrentOrderId() {
-        return currentOrderId;
-    }
+    private List<PositionDTO> positionsToPositionsDTO(List<Position> positions) {
+        clearPositions();
+        for (Position position : positions) {
 
-    public void setCurrentOrderId(Long currentOrderId) {
-        this.currentOrderId = currentOrderId;
+            PositionDTO positionDTO = new PositionDTO();
+            // Создаёт DTO на основе позиции из списка позиций заказа
+            positionDTO.setId(position.getId());
+            positionDTO.setProduct(position.getProduct());
+            positionDTO.setProductId(positionDTO.getProduct().getId());
+            positionDTO.setQuantity(position.getQuantity());
+            positionDTO.setConsumer(position.getConsumer());
+            positionDTO.setBuyingPrice(position.getBuyingPrice());
+            positionDTO.setPurchasedQuantity(position.getPurchasedQuantity());
+            positionDTO.setPurchaseAmount(position.getPurchaseAmount());
+            positionDTO.setPurchased(position.isPurchased());
+            positionDTO.setComment(position.getComment());
+            // Добавляет DTO в список
+            this.positions.add(positionDTO);
+
+        }
+        return this.positions;
     }
 
 }

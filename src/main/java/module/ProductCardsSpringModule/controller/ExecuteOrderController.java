@@ -42,7 +42,7 @@ public class ExecuteOrderController {
         // Если строка передана, выполнится поиск по категории
         if (category != null) {
             System.out.println("1");
-            List<Position> positions = orderService.findByOrderIdAndProductCategory(category);
+            List<PositionDTO> positions = orderService.findByOrderIdAndProductCategory(category);
             model.addAttribute("positions", positions);
         } // Если строка передана, выполнится поиск по имени
         else if (productName != null) {
@@ -64,7 +64,7 @@ public class ExecuteOrderController {
         List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);
 
-        model.addAttribute("orderId", id);
+        model.addAttribute("orderId", orderService.getCurrentOrderId());
 
         // Передаёт адрес запроса для формы в шаблон
         model.addAttribute("searchAction", "/execute/execute_order");
@@ -76,7 +76,7 @@ public class ExecuteOrderController {
     public String updateExecutePosition(
             Model model,
             @ModelAttribute PositionDTO position,
-            @RequestParam Long orderId
+            @RequestParam(required = false) Long orderId
     ) {
 
         orderService.updateExecutePosition(position);
