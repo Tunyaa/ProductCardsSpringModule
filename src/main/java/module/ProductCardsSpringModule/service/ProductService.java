@@ -102,7 +102,8 @@ public class ProductService {
         ArrayList<Product> productsByName = new ArrayList<>();
 
         for (Product product : products) {
-            if (product.getName().toLowerCase().matches(".*" + productName.toLowerCase() + ".*")) {
+            if (product.getName().toLowerCase().matches(".*" + productName.toLowerCase() + ".*")
+                    || product.getVariety().toLowerCase().matches(".*" + productName.toLowerCase() + ".*")) {
                 productsByName.add(product);
             }
         }

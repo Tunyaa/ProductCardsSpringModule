@@ -23,13 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class OrderService {
-
+    
     private List<PositionDTO> positions;
     private Long currentOrderId;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final PositionRepository positionRepository;
-
+    
     public OrderService(OrderRepository orderRepository, ProductRepository productRepository, PositionRepository positionRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
@@ -45,7 +45,7 @@ public class OrderService {
         position.setId(UUID.randomUUID());
         // Добавляет позицию в список
         positions.add(position);
-
+        
     }
 
     // Возвращает List позиций
@@ -57,15 +57,15 @@ public class OrderService {
     public void clearPositions() {
         positions.clear();
     }
-
+    
     public Long getCurrentOrderId() {
         return currentOrderId;
     }
-
+    
     public void setCurrentOrderId(Long currentOrderId) {
         this.currentOrderId = currentOrderId;
     }
-
+    
     @Transactional
     public void createOrder() {
         // Создается новый заказ, куда помещяется текущий список позиций и сохраняется в БД
@@ -110,24 +110,8 @@ public class OrderService {
         }
         Order order = orderRepository.findById(id).orElseThrow();
         
-//        clearPositions();
         List<PositionDTO> positions = positionsToPositionsDTO(order.getPositions());
-//        for (Position position : order.getPositions()) {
-//            PositionDTO positionDTO = new PositionDTO();
-//            // Создаёт DTO на основе позиции из списка позиций заказа
-//            positionDTO.setId(position.getId());
-//            positionDTO.setProduct(position.getProduct());
-//            positionDTO.setProductId(positionDTO.getProduct().getId());
-//            positionDTO.setQuantity(position.getQuantity());
-//            positionDTO.setConsumer(position.getConsumer());
-//            positionDTO.setBuyingPrice(position.getBuyingPrice());
-//            positionDTO.setPurchasedQuantity(position.getPurchasedQuantity());
-//            positionDTO.setPurchaseAmount(position.getPurchaseAmount());
-//            positionDTO.setPurchased(position.isPurchased());
-//            positionDTO.setComment(position.getComment());
-//            // Добавляет DTO в список
-//            positions.add(positionDTO);
-//        }
+        
         setCurrentOrderId(id);
         return positions;
     }
@@ -136,9 +120,9 @@ public class OrderService {
     public void deleteOrderByID(Long id) {
         orderRepository.deleteById(id);
     }
-
+    
     public void updateExecutePosition(PositionDTO position) {
-
+        
         if (position.getPurchaseAmount() == null && position.getBuyingPrice() != null) {
             BigDecimal purchaseAmount = position.getBuyingPrice().multiply(BigDecimal.valueOf(position.getPurchasedQuantity()));
             position.setPurchaseAmount(purchaseAmount);
@@ -147,25 +131,25 @@ public class OrderService {
             BigDecimal buyingPrice = position.getPurchaseAmount().divide(valueOf, 2, RoundingMode.HALF_UP);
             position.setBuyingPrice(buyingPrice);
         }
-
+        
         updatePosition(position);
     }
-
+    
     public void updatePosition(PositionDTO positionDTO) {
-
+        
         Position position = positionRepository.findById(positionDTO.getId()).orElseThrow();
-
+        
         position.setBuyingPrice(positionDTO.getBuyingPrice());
         position.setPurchasedQuantity(positionDTO.getPurchasedQuantity());
         position.setPurchaseAmount(positionDTO.getPurchaseAmount());
         position.setComment(positionDTO.getComment());
         position.setPurchased(true);
-
+        
         positionRepository.save(position);
-
+        
     }
-
-    public List<PositionDTO> findByOrderIdAndProductCategory(String category) {
+    
+    public List<PositionDTO> findPositionsByProductCategory(String category) {
         if (category.equals("allCategories")) {
             // Сделать возвращение всех позиций
             List<PositionDTO> positionsByOrderId = getPositionsByOrderId(currentOrderId);
@@ -175,13 +159,13 @@ public class OrderService {
             List<PositionDTO> positionsToPositionsDTO = positionsToPositionsDTO(positions);
             return positionsToPositionsDTO;
         }
-
+        
     }
-
+    
     private List<PositionDTO> positionsToPositionsDTO(List<Position> positions) {
         clearPositions();
         for (Position position : positions) {
-
+            
             PositionDTO positionDTO = new PositionDTO();
             // Создаёт DTO на основе позиции из списка позиций заказа
             positionDTO.setId(position.getId());
@@ -196,9 +180,32 @@ public class OrderService {
             positionDTO.setComment(position.getComment());
             // Добавляет DTO в список
             this.positions.add(positionDTO);
-
+            
         }
         return this.positions;
     }
-
+    
+    public List<PositionDTO> findPositionsByProductName(String productName) {
+        // Загружает полный список заказа
+        List<PositionDTO> positions = getPositionsByOrderId(currentOrderId);
+        System.out.println("prodName - " + productName);
+        ArrayList<PositionDTO> positionsByName = new ArrayList<>();
+        // Фильтрует позиции соответствующие запросу
+        for (PositionDTO position : positions) {
+            System.out.println(" name - " + position.getProduct().getName());
+            if (position.getProduct().getName().toLowerCase().matches(".*" + productName.toLowerCase() + ".*")
+                    || position.getProduct().getVariety().toLowerCase().matches(".*" + productName.toLowerCase() + ".*")) {
+                positionsByName.add(position);
+            }
+        }
+        
+        System.out.println("len - " + positionsByName.size());
+        for (PositionDTO positionDTO : positionsByName) {
+            System.out.println(positionDTO.getProduct().getName());
+        }
+        
+        return positionsByName;
+        
+    }
+    
 }

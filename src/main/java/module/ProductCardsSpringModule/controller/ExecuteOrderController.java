@@ -1,5 +1,6 @@
 package module.ProductCardsSpringModule.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import module.ProductCardsSpringModule.DTO.PositionDTO;
@@ -38,16 +39,16 @@ public class ExecuteOrderController {
             @RequestParam(required = false) String productName,
             @RequestParam(required = false) String purchased
     ) {
-        System.out.println("ID - " + id);
+
         // Если строка передана, выполнится поиск по категории
         if (category != null) {
-            System.out.println("1");
-            List<PositionDTO> positions = orderService.findByOrderIdAndProductCategory(category);
+            List<PositionDTO> positions = orderService.findPositionsByProductCategory(category);
             model.addAttribute("positions", positions);
         } // Если строка передана, выполнится поиск по имени
         else if (productName != null) {
-//            List<Product> products = productService.findProductByName(productName);
-//            model.addAttribute("products", products);
+            System.out.println("prodName - " + productName);
+            List<PositionDTO> positions = orderService.findPositionsByProductName(productName);
+            model.addAttribute("positions", positions);
         } else {
             // Передаёт весь список продуктов в шаблон
 //            List<Product> allProducts = productService.getAllProducts();
