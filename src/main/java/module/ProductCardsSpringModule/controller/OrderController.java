@@ -50,10 +50,11 @@ public class OrderController {
 
         // Передаёт пустую позицию в шаблон
         model.addAttribute("position", new PositionDTO());
-        
+
         // Передаёт адрес запроса для формы в шаблон
         model.addAttribute("searchAction", "/order/create");
-
+        // Передаёт адрес страницы  с которой бутет выполнен переход по ссылке
+        model.addAttribute("returnUrl", "/order/create");
         // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
         List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);

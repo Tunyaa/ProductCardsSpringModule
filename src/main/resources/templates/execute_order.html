@@ -39,12 +39,14 @@
 
                     <!-- Описание (25%) -->
                     <div class="position-info">
-                        <div class="product-name" 
-                             th:text="${position.product.name}">
-                        </div>
-                        <div class="product-name" 
-                             th:text="${position.product.variety}">
-                        </div>
+                        <a th:href="@{/pricehistory(id=${position.product.id}, name=${position.product.name}, img=${position.product.img}, returnUrl=${returnUrl})}">
+                            <div class="product-name" 
+                                 th:text="${position.product.name}">
+                            </div>
+                            <div class="product-name" 
+                                 th:text="${position.product.variety}">
+                            </div>
+                        </a>
                         <div class="product-country" 
                              th:text="${position.product.country}">
                         </div>

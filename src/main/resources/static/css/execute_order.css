@@ -67,7 +67,7 @@
 }
 
 .checkbox-container {
-     margin-left: 20px;
+     
     display: flex;
     align-items: center;
     gap: 4px;
@@ -185,7 +185,7 @@
     .clear {
     position: absolute; /* Абсолютное позиционирование */
     bottom: 0px;       /* Отступ от нижнего края */
-    right: 60px;        /* Отступ от правого края */
+    right: 30px;        /* Отступ от правого края */
     background: crimson;
     color: white;
     border: none;

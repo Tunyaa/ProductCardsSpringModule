@@ -43,6 +43,8 @@ public class ProductController {
         // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
         List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);
+        // Передаёт адрес страницы  с которой бутет выполнен переход по ссылке
+        model.addAttribute("returnUrl", "/products");
 
         // Если строка передана, выполнится поиск по категории
         if (category != null) {

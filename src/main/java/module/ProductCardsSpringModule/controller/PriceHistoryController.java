@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -34,10 +35,13 @@ public class PriceHistoryController {
     @GetMapping("/pricehistory")
     public String priceHistory(
             Model model,
-            @ModelAttribute("product") Product product) {
+            @ModelAttribute("product") Product product,
+            @RequestParam(name = "returnUrl", required = false) String returnUrl
+    ) {
         PriceHistoryDTO priceHistory = priceHistoryService.getPriceHistoryDTOById(product.getId());
 
         model.addAttribute("product", product);
+        model.addAttribute("returnUrl", returnUrl);
 
         model.addAttribute("prices", priceHistory.getPrices());
         model.addAttribute("dates", priceHistory.getDates());

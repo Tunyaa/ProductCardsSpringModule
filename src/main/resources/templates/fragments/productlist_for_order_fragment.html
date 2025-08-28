@@ -11,24 +11,28 @@
 
                 <div class="products-grid">
                     <div th:each="product : ${products}" class="product-card-grid">
-                        <img th:if="${product.img != null}" 
-                             th:src="@{${product.img}}" 
-                             class="product-img-grid"
-                             th:alt="${product.name}">
-                        <div th:unless="${product.img != null}" class="product-img-grid" style="background: #eee; display: flex; align-items: center; justify-content: center;">
-                            Нет фото
+
+
+                        <div>
+                            <a th:href="@{/pricehistory(id=${product.id}, name=${product.name}, img=${product.img}, returnUrl=${returnUrl})}">
+                                <img th:if="${product.img != null}" 
+                                     th:src="@{${product.img}}" 
+                                     class="product-img-grid"
+                                     th:alt="${product.name}">
+                                <div th:unless="${product.img != null}" class="product-img-grid" style="background: #eee; display: flex; align-items: center; justify-content: center;">
+                                    Нет фото
+                                </div>
+
+
+                                <div class="product-name-grid" th:text="${product.name + ' ' + product.variety + ' ' + product.country }"></div>
+                            </a>
+                            <div class="product-details-grid" th:if="${product.currentPrice} != null"
+                                 th:text="${#numbers.formatDecimal(product.currentPrice, 1, 0)} + ' ₽' + ' ' + ${product.packing}">
+                            </div>
+                            <div class="product-details-grid" 
+                                 th:text="${product.description}">
+                            </div>
                         </div>
-
-
-                        <div class="product-name-grid" th:text="${product.name + ' ' + product.variety + ' ' + product.country }"></div>
-
-                        <div class="product-details-grid" th:if="${product.currentPrice} != null"
-                             th:text="${#numbers.formatDecimal(product.currentPrice, 1, 0)} + ' ₽' + ' ' + ${product.packing}">
-                        </div>
-                        <div class="product-details-grid" 
-                             th:text="${product.description}">
-                        </div>
-
 
 
                         <form th:action="@{/order/add}" method="post" th:object="${position}">

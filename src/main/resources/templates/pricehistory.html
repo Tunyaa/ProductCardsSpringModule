@@ -26,8 +26,9 @@
     <body>
 
         <div th:insert="~{fragments/navigate :: navigate}"></div>
+        
         <div>
-            <a class="menu-toggle" href="/products">Назад</a>
+            <a class="menu-toggle" th:href="@{${returnUrl}}">Назад</a>
         </div>
         <div>
             <img th:src="@{${product.img}}" style="max-height: 200px"/>

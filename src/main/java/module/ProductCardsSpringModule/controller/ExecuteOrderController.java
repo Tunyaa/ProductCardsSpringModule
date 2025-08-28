@@ -59,14 +59,18 @@ public class ExecuteOrderController {
             orderService.getPositionsByOrderId(id);
             List<PositionDTO> positions = orderService.getAllPositions();
             model.addAttribute("positions", positions);
+        } else {
+            List<PositionDTO> positions = orderService.getAllPositions();
+            model.addAttribute("positions", positions);
         }
 
         // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
         List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);
-
+        // Передаёт в модель id текущего заказа
         model.addAttribute("orderId", orderService.getCurrentOrderId());
-
+        // Передаёт адрес страницы  с которой бутет выполнен переход по ссылке
+        model.addAttribute("returnUrl", "/execute/execute_order");
         // Передаёт адрес запроса для формы в шаблон
         model.addAttribute("searchAction", "/execute/execute_order");
 
@@ -89,7 +93,16 @@ public class ExecuteOrderController {
     @PostMapping("/switch_checkbox")
     public String switchCheckbox(@ModelAttribute PositionDTO position) {
         System.out.println(position.getId() + " - ID position");
-        orderService.clearExicutePositionByID(position.getId()); 
+        orderService.clearExicutePositionByID(position.getId());
+        return "redirect:/execute/execute_order?id=" + orderService.getCurrentOrderId();
+    }
+
+    @GetMapping("/current_execute_order")
+    public String currentExecuteOrder() {
+        System.out.println(orderService.getCurrentOrderId() == null);
+        if (orderService.getCurrentOrderId() == null) {
+            return "redirect:/order/showorders";
+        }
         return "redirect:/execute/execute_order?id=" + orderService.getCurrentOrderId();
     }
 
