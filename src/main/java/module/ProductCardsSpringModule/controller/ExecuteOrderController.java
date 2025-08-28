@@ -88,9 +88,9 @@ public class ExecuteOrderController {
 
     @PostMapping("/switch_checkbox")
     public String switchCheckbox(@ModelAttribute PositionDTO position) {
-        System.out.println(position.getPurchased() + "----------------------------------------");
-
-        return "redirect:/execute/execute_order";
+        System.out.println(position.getId() + " - ID position");
+        orderService.clearExicutePositionByID(position.getId()); 
+        return "redirect:/execute/execute_order?id=" + orderService.getCurrentOrderId();
     }
 
 }

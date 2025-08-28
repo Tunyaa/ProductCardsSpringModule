@@ -231,4 +231,13 @@ public class OrderService {
         return positionsByPurchaseStatus;
     }
 
+    public void clearExicutePositionByID(UUID id) {
+        Position position = positionRepository.findById(id).orElseThrow();
+        position.setBuyingPrice(null);
+        position.setPurchasedQuantity(0);
+        position.setPurchaseAmount(null);
+        position.setPurchased(false);
+        positionRepository.save(position);
+    }
+
 }

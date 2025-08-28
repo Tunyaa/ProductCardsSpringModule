@@ -1,195 +1,201 @@
 .positions-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 12px;
-    max-width: 100%;
+    gap: 6px;
+    padding: 10px;
 }
 
 .position-card {
     background: white;
     border: 1px solid #e0e0e0;
     border-radius: 6px;
-    padding: 10px;
+    padding: 8px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.position-content {
     display: flex;
     align-items: center;
-    gap: 12px;
-    min-height: 80px;
+    gap: 8px;
+    min-height: 60px;
+}
+
+.position-image-container {
+    flex: 0 0 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1px;
 }
 
 .position-image {
-    width: 60px;
-    height: 60px;
+    width: 45px;
+    height: 45px;
     object-fit: cover;
     border-radius: 4px;
-    flex-shrink: 0;
 }
 
 .position-info {
-    flex: 1;
+    flex: 0 0 30%;
     min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 2px;
+    padding-right: 5px;
 }
 
 .product-name {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 12px;
     color: #333;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.2;
 }
 
-.product-details {
-    font-size: 12px;
+.product-country,
+.position-quantity,
+.position-consumer {
+    font-size: 10px;
     color: #666;
+    line-height: 1.1;
 }
 
-.position-details {
-    font-size: 11px;
-    color: #888;
-}
-
-.position-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;
-    flex-shrink: 0;
+.checkbox-form {
+    margin-top: 3px;
 }
 
 .checkbox-container {
+     margin-left: 20px;
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 12px;
+    gap: 4px;
+    font-size: 30px;
 }
 
 .checkbox-container input[type="checkbox"] {
     margin: 0;
-    transform: scale(0.9);
+    transform: scale(0.8);
 }
 
-.form-row {
-    display: flex;
-    gap: 8px;
+.position-form {
+    flex: 0 0 50%;
+    min-width: 0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 60px 60px 50px auto;
+    gap: 4px;
     align-items: end;
 }
 
 .input-group {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    min-width: 80px;
+    gap: 1px;
 }
 
 .input-group input {
-    padding: 4px 6px;
+    padding: 2px 4px;
     border: 1px solid #ddd;
     border-radius: 3px;
-    font-size: 12px;
+    font-size: 1px;
     width: 100%;
     box-sizing: border-box;
+    text-align: center;
 }
 
 .input-label {
-    font-size: 10px;
+    font-size: 8px;
     color: #666;
     font-weight: 500;
     text-align: center;
+    white-space: nowrap;
 }
 
 .save-btn {
     background: #4CAF50;
     color: white;
     border: none;
-    padding: 4px 10px;
+    padding: 3px 6px;
     border-radius: 3px;
     cursor: pointer;
-    font-size: 12px;
-    height: 26px;
-    white-space: nowrap;
+    font-size: 11px;
+    height: 22px;
+    min-width: 30px;
 }
 
 .save-btn:hover {
     background: #45a049;
 }
 
-/* Мобильная версия */
+/* Адаптивность для мобильных */
 @media (max-width: 768px) {
-    .position-card {
-        flex-wrap: wrap;
-        gap: 8px;
-        padding: 8px;
-    }
-    
-    .position-image {
-        width: 50px;
-        height: 50px;
-        order: 1;
-    }
-    
-    .position-info {
-        order: 2;
-        flex: 2;
-    }
-    
-    .position-actions {
-        order: 3;
-        width: 100%;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .checkbox-container {
-        order: 1;
-    }
-    
-    .form-row {
-        order: 2;
+    .position-content {
         gap: 6px;
     }
     
-    .input-group {
-        min-width: 70px;
+    .position-image {
+        width: 75px;
+        height: 55px;
+    }
+    
+    .product-name {
+        font-size: 11px;
+    }
+    
+   
+    .position-quantity {
+        font-size: 18px;
+    }
+     .product-country,
+    .position-consumer {
+        font-size: 9px;
+    }
+    
+    .form-grid {
+        grid-template-columns: 50px 50px 60px auto;
+        gap: 3px;
     }
     
     .input-group input {
-        padding: 3px 5px;
-        font-size: 11px;
+        padding: 3px 1px;
+        font-size: 12px;
+    }
+    
+    .input-label {
+        font-size: 10px;
     }
     
     .save-btn {
-        padding: 3px 8px;
-        font-size: 11px;
+        margin-top: 4px;
+        padding: 2px 8px;
+        font-size: 14px;
+        height: 20px;
+        min-width: 25px;
     }
+    
+    .clear-container {
+    position: relative; /* Нужно для абсолютного позиционирования кнопки */
+    min-height: 0px; /* Минимальная высота для контейнера */
+}
+    
+    .clear {
+    position: absolute; /* Абсолютное позиционирование */
+    bottom: 0px;       /* Отступ от нижнего края */
+    right: 60px;        /* Отступ от правого края */
+    background: crimson;
+    color: white;
+    border: none;
+    padding: 2px 2px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12px;
 }
 
-/* Десктопная версия */
-@media (min-width: 769px) {
-    .positions-container {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    
-    .position-card {
-        min-height: 70px;
-    }
-    
-    .position-image {
-        width: 70px;
-        height: 70px;
-    }
-    
-    .form-row {
-        gap: 10px;
-    }
-    
-    .input-group {
-        min-width: 90px;
-    }
+.clear:hover {
+    background: #45a049;
+}
 }

@@ -32,7 +32,7 @@
                             <div class="cart-item-info">
                                 <div class="cart-item-name" th:text="${position.product.name}"></div>
                                 <div class="cart-item-details">
-                                    <span th:text="${#numbers.formatDecimal(position.quantity, 1, 3) + ' кг'}"></span>
+                                    <span th:text="${#numbers.formatDecimal(position.quantity, 1, 1) + ' кг'}"></span>
                                     <span th:if="${position.consumer != null}" th:text="' | ' + ${position.consumer}"></span>
                                 </div>
                             </div>
