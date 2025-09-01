@@ -53,9 +53,7 @@ public class ExecuteOrderController {
             // Передаёт весь список продуктов(куплены\не куплены\все) в шаблон
             List<PositionDTO> positions = orderService.findPositionsByPurchaseStatus(purchaseStatus);
             model.addAttribute("positions", positions);
-        }
-
-        if (id != null) {
+        } else if (id != null) {
             orderService.getPositionsByOrderId(id);
             List<PositionDTO> positions = orderService.getAllPositions();
             model.addAttribute("positions", positions);
