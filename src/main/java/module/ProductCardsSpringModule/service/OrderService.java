@@ -23,13 +23,15 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class OrderService {
-    
+
     private List<PositionDTO> positions;
     private Long currentOrderId;
+    private String methodParametr;
+    private String lastMethod;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final PositionRepository positionRepository;
-    
+
     public OrderService(OrderRepository orderRepository, ProductRepository productRepository, PositionRepository positionRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
@@ -45,7 +47,7 @@ public class OrderService {
         position.setId(UUID.randomUUID());
         // Добавляет позицию в список
         positions.add(position);
-        
+
     }
 
     // Возвращает List позиций
@@ -57,15 +59,15 @@ public class OrderService {
     public void clearPositions() {
         positions.clear();
     }
-    
+
     public Long getCurrentOrderId() {
         return currentOrderId;
     }
-    
+
     public void setCurrentOrderId(Long currentOrderId) {
         this.currentOrderId = currentOrderId;
     }
-    
+
     @Transactional
     public void createOrder() {
         // Создается новый заказ, куда помещяется текущий список позиций и сохраняется в БД
@@ -103,15 +105,16 @@ public class OrderService {
 
     // Возвращает список позиций заказа по id заказа
     public List<PositionDTO> getPositionsByOrderId(Long id) {
+
         // Загружает заказ по id из БД, очищает список
         // Если id не передан, то загружается список по номеру из текущего заказа
         if (id == null) {
             id = getCurrentOrderId();
         }
         Order order = orderRepository.findById(id).orElseThrow();
-        
+
         List<PositionDTO> positions = positionsToPositionsDTO(order.getPositions());
-        
+
         setCurrentOrderId(id);
         return positions;
     }
@@ -120,9 +123,9 @@ public class OrderService {
     public void deleteOrderByID(Long id) {
         orderRepository.deleteById(id);
     }
-    
+
     public void updateExecutePosition(PositionDTO position) {
-        
+
         if (position.getPurchaseAmount() == null && position.getBuyingPrice() != null) {
             BigDecimal purchaseAmount = position.getBuyingPrice().multiply(BigDecimal.valueOf(position.getPurchasedQuantity()));
             position.setPurchaseAmount(purchaseAmount);
@@ -131,12 +134,12 @@ public class OrderService {
             BigDecimal buyingPrice = position.getPurchaseAmount().divide(valueOf, 2, RoundingMode.HALF_UP);
             position.setBuyingPrice(buyingPrice);
         }
-        
+
         updatePosition(position);
     }
-    
+
     public void updatePosition(PositionDTO positionDTO) {
-        
+
         Position position = positionRepository.findById(positionDTO.getId()).orElseThrow();
         position.getProduct().setCurrentPrice(positionDTO.getBuyingPrice());
         position.setBuyingPrice(positionDTO.getBuyingPrice());
@@ -144,12 +147,13 @@ public class OrderService {
         position.setPurchaseAmount(positionDTO.getPurchaseAmount());
         position.setComment(positionDTO.getComment());
         position.setPurchased(true);
-        
+
         positionRepository.save(position);
-        
+
     }
-    
+
     public List<PositionDTO> findPositionsByProductCategory(String category) {
+        setLastRequest(category, "findPositionsByProductCategory");
         if (category.equals("allCategories")) {
             // Сделать возвращение всех позиций
             List<PositionDTO> positionsByOrderId = getPositionsByOrderId(currentOrderId);
@@ -159,13 +163,13 @@ public class OrderService {
             List<PositionDTO> positionsToPositionsDTO = positionsToPositionsDTO(positions);
             return positionsToPositionsDTO;
         }
-        
+
     }
-    
+
     private List<PositionDTO> positionsToPositionsDTO(List<Position> positions) {
         clearPositions();
         for (Position position : positions) {
-            
+
             PositionDTO positionDTO = new PositionDTO();
             // Создаёт DTO на основе позиции из списка позиций заказа
             positionDTO.setId(position.getId());
@@ -180,57 +184,57 @@ public class OrderService {
             positionDTO.setComment(position.getComment());
             // Добавляет DTO в список
             this.positions.add(positionDTO);
-            
+
         }
         return this.positions;
     }
-    
+
     public List<PositionDTO> findPositionsByProductName(String productName) {
+        setLastRequest(productName, "findPositionsByProductName");
         // Загружает полный список заказа
         List<PositionDTO> positions = getPositionsByOrderId(currentOrderId);
-        
+
         ArrayList<PositionDTO> positionsByName = new ArrayList<>();
         // Фильтрует позиции соответствующие запросу
         for (PositionDTO position : positions) {
-            System.out.println(" name - " + position.getProduct().getName());
+
             if (position.getProduct().getName().toLowerCase().matches(".*" + productName.toLowerCase() + ".*")
                     || position.getProduct().getVariety().toLowerCase().matches(".*" + productName.toLowerCase() + ".*")) {
                 positionsByName.add(position);
             }
         }
-        
-        System.out.println("len - " + positionsByName.size());
+
         for (PositionDTO positionDTO : positionsByName) {
-            System.out.println(positionDTO.getProduct().getName());
+
         }
-        
+
         return positionsByName;
-        
+
     }
-    
+
     public List<PositionDTO> findPositionsByPurchaseStatus(String purchaseStatusString) {
+        setLastRequest(purchaseStatusString, "findPositionsByPurchaseStatus");
         // Загружает полный список заказа
         List<PositionDTO> positions = getPositionsByOrderId(currentOrderId);
-        System.out.println(" status - " + purchaseStatusString);
+
         if (purchaseStatusString.equals("all")) {
-            System.out.println("all");
+
             return positions;
         }
         List<PositionDTO> positionsByPurchaseStatus = new ArrayList<>();
         boolean purchaseStatusBoolean = purchaseStatusString.equals("purchased") ? true : false;
         // Фильтрует позиции соответствующие запросу
         for (PositionDTO position : positions) {
-            System.out.println("position.getPurchased() -" + position.getPurchased() + " - purchaseStatusBoolean - " + purchaseStatusBoolean);
-            
+
             if (position.getPurchased() == purchaseStatusBoolean) {
-                System.out.println("Add");
+
                 positionsByPurchaseStatus.add(position);
             }
         }
-        
+
         return positionsByPurchaseStatus;
     }
-    
+
     public void clearExicutePositionByID(UUID id) {
         Position position = positionRepository.findById(id).orElseThrow();
         position.setBuyingPrice(null);
@@ -239,5 +243,34 @@ public class OrderService {
         position.setPurchased(false);
         positionRepository.save(position);
     }
-    
+
+    public List<PositionDTO> getPositionsByLastRequest() {
+        List<PositionDTO> positions;
+
+        switch (this.lastMethod) {
+            case "findPositionsByProductCategory":
+
+                positions = findPositionsByProductCategory(this.methodParametr);
+                break;
+            case "findPositionsByProductName":
+
+                positions = findPositionsByProductName(this.methodParametr);
+                break;
+            case "findPositionsByPurchaseStatus":
+
+                positions = findPositionsByPurchaseStatus(this.methodParametr);
+                break;
+
+            default:
+                throw new AssertionError();
+        }
+        return positions;
+    }
+
+    private void setLastRequest(String methodParametr, String lastMethod) {
+
+        this.lastMethod = lastMethod;
+        this.methodParametr = methodParametr;
+    }
+
 }

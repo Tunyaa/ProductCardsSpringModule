@@ -46,7 +46,7 @@ public class ExecuteOrderController {
             model.addAttribute("positions", positions);
         } // Если строка передана, выполнится поиск по имени
         else if (productName != null) {
-            System.out.println("prodName - " + productName);
+
             List<PositionDTO> positions = orderService.findPositionsByProductName(productName);
             model.addAttribute("positions", positions);
         } else if (purchaseStatus != null) {
@@ -58,7 +58,8 @@ public class ExecuteOrderController {
             List<PositionDTO> positions = orderService.getAllPositions();
             model.addAttribute("positions", positions);
         } else {
-            List<PositionDTO> positions = orderService.getAllPositions();
+
+            List<PositionDTO> positions = orderService.getPositionsByLastRequest();
             model.addAttribute("positions", positions);
         }
 
@@ -85,19 +86,20 @@ public class ExecuteOrderController {
         orderService.updateExecutePosition(position);
 
         orderService.getPositionsByOrderId(orderId);
-        return "redirect:/execute/execute_order?id=" + orderId;
+        return "redirect:/execute/execute_order";
+//        return "redirect:/execute/execute_order?id=" + orderId;
     }
 
     @PostMapping("/switch_checkbox")
     public String switchCheckbox(@ModelAttribute PositionDTO position) {
-        System.out.println(position.getId() + " - ID position");
+
         orderService.clearExicutePositionByID(position.getId());
         return "redirect:/execute/execute_order?id=" + orderService.getCurrentOrderId();
     }
 
     @GetMapping("/current_execute_order")
     public String currentExecuteOrder() {
-        System.out.println(orderService.getCurrentOrderId() == null);
+
         if (orderService.getCurrentOrderId() == null) {
             return "redirect:/order/showorders";
         }
