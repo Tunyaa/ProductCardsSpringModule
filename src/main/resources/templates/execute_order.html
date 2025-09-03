@@ -25,6 +25,8 @@
             </form>
         </div>
 
+        <div th:text="'Сумма заказа: ' + (${purchaseAmount} != null ? ${purchaseAmount} : '0')"></div>
+
         <div class="positions-container">
 
             <div class="position-card" th:each="position : ${positions}">

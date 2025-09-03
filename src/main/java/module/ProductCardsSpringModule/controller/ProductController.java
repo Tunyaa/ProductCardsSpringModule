@@ -38,27 +38,27 @@ public class ProductController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String productName
     ) {
-        // Передаёт адрес запроса для формы в шаблон
+        // Передаёт адрес  для формы в шаблон(фрагмент поиска)
         model.addAttribute("searchAction", "/products");
         // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
         List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);
-        // Передаёт адрес страницы  с которой бутет выполнен переход по ссылке
+        // Передаёт адрес  для формы в шаблон(фрагмент возвращение на предыдущую страницу)
         model.addAttribute("returnUrl", "/products");
 
+        List<Product> products;
         // Если строка передана, выполнится поиск по категории
         if (category != null) {
-            List<Product> products = productService.findProductsByCategory(category);
-            model.addAttribute("products", products);
+            products = productService.findProductsByCategory(category);
         } // Если строка передана, выполнится поиск по имени
         else if (productName != null) {
-            List<Product> products = productService.findProductByName(productName);
-            model.addAttribute("products", products);
+            products = productService.findProductByName(productName);
         } else {
             // Передаёт весь список продуктов в шаблон
-            List<Product> allProducts = productService.getAllProducts();
-            model.addAttribute("products", allProducts);
+            products = productService.getAllProducts();
         }
+        // Передаёт в модель список продуктов
+        model.addAttribute("products", products);
 
         return "products";
     }

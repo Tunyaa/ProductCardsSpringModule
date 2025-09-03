@@ -31,65 +31,70 @@ public class ExecuteOrderController {
         this.orderService = orderService;
     }
 
+    // Возвращает список позиций из выбранного заказа.
     @GetMapping("/execute_order")
     public String executeOrderByOrderId(
             Model model,
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String productName,
-            @RequestParam(required = false) String purchaseStatus
+            @RequestParam(required = false) Long id, // ID заказа
+            @RequestParam(required = false) String category,// Фильтры позиций: по категории товара
+            @RequestParam(required = false) String productName,//  по строке
+            @RequestParam(required = false) String purchaseStatus//  по куплен\некуплен
     ) {
 
-        // Если строка передана, выполнится поиск по категории
+        List<PositionDTO> positions;
+
+        // Если строка передана, выполнится поиск позиций по категории
         if (category != null) {
-            List<PositionDTO> positions = orderService.findPositionsByProductCategory(category);
-            model.addAttribute("positions", positions);
-        } // Если строка передана, выполнится поиск по имени
+            positions = orderService.findPositionsByProductCategory(category);
+        } // Если строка передана, выполнится поиск позиций по имени
         else if (productName != null) {
-
-            List<PositionDTO> positions = orderService.findPositionsByProductName(productName);
-            model.addAttribute("positions", positions);
-        } else if (purchaseStatus != null) {
-            // Передаёт весь список продуктов(куплены\не куплены\все) в шаблон
-            List<PositionDTO> positions = orderService.findPositionsByPurchaseStatus(purchaseStatus);
-            model.addAttribute("positions", positions);
-        } else if (id != null) {
+            positions = orderService.findPositionsByProductName(productName);
+        } // Если строка передана, выполнится поиск позиций по статусу покупки
+        else if (purchaseStatus != null) {
+            positions = orderService.findPositionsByPurchaseStatus(purchaseStatus);
+        } // Если id заказа передан, будет возвращен список позиций этого заказа
+        else if (id != null) {
             orderService.getPositionsByOrderId(id);
-            List<PositionDTO> positions = orderService.getAllPositions();
-            model.addAttribute("positions", positions);
-        } else {
-
-            List<PositionDTO> positions = orderService.getPositionsByLastRequest();
-            model.addAttribute("positions", positions);
+            positions = orderService.getAllPositions();
+        } // Иначе будет выполнен способ поиска, который выполнялся последним
+        else {
+            positions = orderService.getPositionsByLastRequest();
         }
-
-        // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
+        // Передаёт в модель список позиций
+        model.addAttribute("positions", positions);
+        // Передаёт в модель -> в форму -> в поле выбора категории список категорий
         List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);
         // Передаёт в модель id текущего заказа
         model.addAttribute("orderId", orderService.getCurrentOrderId());
-        // Передаёт адрес страницы  с которой бутет выполнен переход по ссылке
+        // Передаёт адрес  для формы в шаблон(фрагмент возвращение на предыдущую страницу)
         model.addAttribute("returnUrl", "/execute/execute_order");
-        // Передаёт адрес запроса для формы в шаблон
+        // Передаёт адрес  для формы в шаблон(фрагмент поиска)
         model.addAttribute("searchAction", "/execute/execute_order");
+        // Сумма заказа
+        model.addAttribute("purchaseAmount", orderService.purchaseAmount());
 
         return "execute_order";
     }
 
+    // Обновляет позицию(статус, цена, количество, сумма)
     @PostMapping("/update")
     public String updateExecutePosition(
             Model model,
             @ModelAttribute PositionDTO position,
             @RequestParam(required = false) Long orderId
     ) {
-
+        // Обновляет позицию
         orderService.updateExecutePosition(position);
-
+        // Загружает список с обновленными полями
         orderService.getPositionsByOrderId(orderId);
         return "redirect:/execute/execute_order";
-//        return "redirect:/execute/execute_order?id=" + orderId;
+        // Возвращение без id, чтобы выполнилось условие else в /execute_order
+        //        return "redirect:/execute/execute_order?id=" + orderId;
     }
 
+    // Отменяет обновленную позицию
+    // Статус, цена, количество, сумма возвращаются в исходное состояние
     @PostMapping("/switch_checkbox")
     public String switchCheckbox(@ModelAttribute PositionDTO position) {
 
@@ -97,6 +102,7 @@ public class ExecuteOrderController {
         return "redirect:/execute/execute_order?id=" + orderService.getCurrentOrderId();
     }
 
+    // Возарвщает список позиций последнего выбранного заказа
     @GetMapping("/current_execute_order")
     public String currentExecuteOrder() {
 

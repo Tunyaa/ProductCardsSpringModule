@@ -246,23 +246,28 @@ public class OrderService {
 
     public List<PositionDTO> getPositionsByLastRequest() {
         List<PositionDTO> positions;
+        if (this.methodParametr != null) {
 
-        switch (this.lastMethod) {
-            case "findPositionsByProductCategory":
+            switch (this.lastMethod) {
+                case "findPositionsByProductCategory":
 
-                positions = findPositionsByProductCategory(this.methodParametr);
-                break;
-            case "findPositionsByProductName":
+                    positions = findPositionsByProductCategory(this.methodParametr);
+                    break;
+                case "findPositionsByProductName":
 
-                positions = findPositionsByProductName(this.methodParametr);
-                break;
-            case "findPositionsByPurchaseStatus":
+                    positions = findPositionsByProductName(this.methodParametr);
+                    break;
+                case "findPositionsByPurchaseStatus":
 
-                positions = findPositionsByPurchaseStatus(this.methodParametr);
-                break;
+                    positions = findPositionsByPurchaseStatus(this.methodParametr);
+                    break;
 
-            default:
-                throw new AssertionError();
+                default:
+                    positions = getPositionsByOrderId(currentOrderId);
+            }
+
+        } else {
+            positions = getPositionsByOrderId(currentOrderId);
         }
         return positions;
     }
@@ -271,6 +276,11 @@ public class OrderService {
 
         this.lastMethod = lastMethod;
         this.methodParametr = methodParametr;
+    }
+
+    public BigDecimal purchaseAmount() {
+        BigDecimal purchaseAmount = positionRepository.findSumPurchaseAmountByOrderId(currentOrderId);
+        return purchaseAmount;
     }
 
 }

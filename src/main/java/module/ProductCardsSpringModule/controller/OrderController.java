@@ -44,13 +44,10 @@ public class OrderController {
     ) {
         // Передаёт список позиций в шаблон
         model.addAttribute("positions", orderService.getAllPositions());
-
         // Передаёт список потребителей в шаблон
         model.addAttribute("consumers", Arrays.asList(Сonsumer.values()));
-
         // Передаёт пустую позицию в шаблон
         model.addAttribute("position", new PositionDTO());
-
         // Передаёт адрес запроса для формы в шаблон
         model.addAttribute("searchAction", "/order/create");
         // Передаёт адрес страницы  с которой бутет выполнен переход по ссылке
