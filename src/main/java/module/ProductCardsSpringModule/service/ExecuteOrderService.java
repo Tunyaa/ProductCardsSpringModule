@@ -2,7 +2,6 @@ package module.ProductCardsSpringModule.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -11,84 +10,29 @@ import module.ProductCardsSpringModule.model.Order;
 import module.ProductCardsSpringModule.model.Position;
 import module.ProductCardsSpringModule.repository.OrderRepository;
 import module.ProductCardsSpringModule.repository.PositionRepository;
-import module.ProductCardsSpringModule.repository.ProductRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author tunyaa
  */
-@Service
-public class OrderService {
+//@Service
+public class ExecuteOrderService {
 
     private List<PositionDTO> positions;  // Список текущих позиций
     private Long currentOrderId;               // id текущего заказа
     private String methodParametr;          // Аргумент для поиска, который был передан последним
     private String lastMethod;                    // Метод поиска, который был выполен последним
     private final OrderRepository orderRepository;
-    private final ProductRepository productRepository;
     private final PositionRepository positionRepository;
 
-    public OrderService(
+    public ExecuteOrderService(
             OrderRepository orderRepository,
-            ProductRepository productRepository,
             PositionRepository positionRepository
     ) {
         this.orderRepository = orderRepository;
-        this.productRepository = productRepository;
         this.positionRepository = positionRepository;
         this.positions = new ArrayList<>();
-    }
-
-    @Transactional
-    public void createOrder() {
-        // Создается новый заказ, куда помещяется текущий список позиций и сохраняется в БД
-        Order order = new Order();
-        for (PositionDTO positionDto : positions) {
-            // Создаёт позицию на основе DTO
-            Position position = new Position();
-            position.setConsumer(positionDto.getConsumer());
-            position.setProduct(positionDto.getProduct());
-            position.setQuantity(positionDto.getQuantity());
-
-            // Добавляет позицию в список позиций в заказе
-            order.getPositions().add(position);
-        }
-
-        // Присваивает полю заказа текущую дату и время
-        order.setCreatedAt(LocalDateTime.now());
-
-        // Сохраняет заказ в БД
-        orderRepository.save(order);
-        // Очищает List позиций
-        clearPositions();
-    }
-
-    // Возвращает список заказов
-    public List<Order> getAllOrders() {
-        List<Order> orders = orderRepository.findAll();
-        return orders;
-    }
-
-    // Удаляет заказ по id
-    public void deleteOrderByID(Long id) {
-        orderRepository.deleteById(id);
-    }
-
-    // Добавляет позицию в список
-    public void addPosition(PositionDTO position) {
-        // Загружает продукт из БД по id. Присваивает продукт позиции
-        position.setProduct(productRepository.findById(position.getProductId()).orElseThrow());
-        // Присваивает id позиции. Используется в deletePosition() - удалить позицию из списка по id
-        position.setId(UUID.randomUUID());
-        // Добавляет позицию в список
-        positions.add(position);
-    }
-
-    // Удаляет позицию из списка по id
-    public void deletePosition(PositionDTO position) {
-        positions.removeIf(e -> e.getId().equals(position.getId()));
     }
 
     // Возвращает список позиций по id заказа
@@ -105,62 +49,6 @@ public class OrderService {
 
         setCurrentOrderId(id);
         return positionsDTO;
-    }
-
-    public void updateExecutePosition(PositionDTO position) {
-
-        if (position.getPurchaseAmount() == null && position.getBuyingPrice() != null) {
-            BigDecimal purchaseAmount = position.getBuyingPrice()
-                    .multiply(BigDecimal.valueOf(position.getPurchasedQuantity()));
-            position.setPurchaseAmount(purchaseAmount);
-        } else if (position.getBuyingPrice() == null && position.getPurchaseAmount() != null) {
-            BigDecimal valueOf = BigDecimal.valueOf(position.getPurchasedQuantity());
-            BigDecimal buyingPrice = position.getPurchaseAmount()
-                    .divide(valueOf, 2, RoundingMode.HALF_UP);
-            position.setBuyingPrice(buyingPrice);
-        }
-
-        updatePosition(position);
-    }
-
-    // Обновляет позицию. 
-    // Позиция меняет статус на "куплено" и сохраняет цену, количество и сумму
-    public void updatePosition(PositionDTO positionDTO) {
-
-        Position position = positionRepository.findById(positionDTO.getId()).orElseThrow();
-        position.getProduct().setCurrentPrice(positionDTO.getBuyingPrice());
-        position.setBuyingPrice(positionDTO.getBuyingPrice());
-        position.setPurchasedQuantity(positionDTO.getPurchasedQuantity());
-        position.setPurchaseAmount(positionDTO.getPurchaseAmount());
-        position.setComment(positionDTO.getComment());
-        position.setPurchased(true);
-
-        positionRepository.save(position);
-
-    }
-
-    // Преобразовывает список position  в positionDTO
-    private List<PositionDTO> positionsToPositionsDTO(List<Position> positions) {
-        clearPositions();
-        for (Position position : positions) {
-
-            PositionDTO positionDTO = new PositionDTO();
-            // Создаёт DTO на основе позиции из списка позиций заказа
-            positionDTO.setId(position.getId());
-            positionDTO.setProduct(position.getProduct());
-            positionDTO.setProductId(positionDTO.getProduct().getId());
-            positionDTO.setQuantity(position.getQuantity());
-            positionDTO.setConsumer(position.getConsumer());
-            positionDTO.setBuyingPrice(position.getBuyingPrice());
-            positionDTO.setPurchasedQuantity(position.getPurchasedQuantity());
-            positionDTO.setPurchaseAmount(position.getPurchaseAmount());
-            positionDTO.setPurchased(position.isPurchased());
-            positionDTO.setComment(position.getComment());
-            // Добавляет DTO в список
-            this.positions.add(positionDTO);
-
-        }
-        return this.positions;
     }
 
     // Поиск позиций по категории продукта
@@ -222,6 +110,38 @@ public class OrderService {
         return positionsByPurchaseStatus;
     }
 
+    public void updateExecutePosition(PositionDTO position) {
+
+        if (position.getPurchaseAmount() == null && position.getBuyingPrice() != null) {
+            BigDecimal purchaseAmount = position.getBuyingPrice()
+                    .multiply(BigDecimal.valueOf(position.getPurchasedQuantity()));
+            position.setPurchaseAmount(purchaseAmount);
+        } else if (position.getBuyingPrice() == null && position.getPurchaseAmount() != null) {
+            BigDecimal valueOf = BigDecimal.valueOf(position.getPurchasedQuantity());
+            BigDecimal buyingPrice = position.getPurchaseAmount()
+                    .divide(valueOf, 2, RoundingMode.HALF_UP);
+            position.setBuyingPrice(buyingPrice);
+        }
+
+        updatePosition(position);
+    }
+
+    // Обновляет позицию. 
+    // Позиция меняет статус на "куплено" и сохраняет цену, количество и сумму
+    public void updatePosition(PositionDTO positionDTO) {
+
+        Position position = positionRepository.findById(positionDTO.getId()).orElseThrow();
+        position.getProduct().setCurrentPrice(positionDTO.getBuyingPrice());
+        position.setBuyingPrice(positionDTO.getBuyingPrice());
+        position.setPurchasedQuantity(positionDTO.getPurchasedQuantity());
+        position.setPurchaseAmount(positionDTO.getPurchaseAmount());
+        position.setComment(positionDTO.getComment());
+        position.setPurchased(true);
+
+        positionRepository.save(position);
+
+    }
+
     // Отменяет купленную позицию
     public void clearExicutePositionByID(UUID id) {
         Position position = positionRepository.findById(id).orElseThrow();
@@ -275,14 +195,28 @@ public class OrderService {
         return purchaseAmount;
     }
 
-    // Возвращает List позиций
-    public List<PositionDTO> getAllPositions() {
-        return positions;
-    }
+    // Преобразовывает список position  в positionDTO
+    private List<PositionDTO> positionsToPositionsDTO(List<Position> positions) {
+        clearPositions();
+        for (Position position : positions) {
 
-    // Очищает List позиций
-    public void clearPositions() {
-        positions.clear();
+            PositionDTO positionDTO = new PositionDTO();
+            // Создаёт DTO на основе позиции из списка позиций заказа
+            positionDTO.setId(position.getId());
+            positionDTO.setProduct(position.getProduct());
+            positionDTO.setProductId(positionDTO.getProduct().getId());
+            positionDTO.setQuantity(position.getQuantity());
+            positionDTO.setConsumer(position.getConsumer());
+            positionDTO.setBuyingPrice(position.getBuyingPrice());
+            positionDTO.setPurchasedQuantity(position.getPurchasedQuantity());
+            positionDTO.setPurchaseAmount(position.getPurchaseAmount());
+            positionDTO.setPurchased(position.isPurchased());
+            positionDTO.setComment(position.getComment());
+            // Добавляет DTO в список
+            this.positions.add(positionDTO);
+
+        }
+        return this.positions;
     }
 
     // Возвращает текущий id заказа
@@ -294,4 +228,33 @@ public class OrderService {
     public void setCurrentOrderId(Long currentOrderId) {
         this.currentOrderId = currentOrderId;
     }
+
+    public List<PositionDTO> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<PositionDTO> positions) {
+        this.positions = positions;
+    }
+
+    public String getMethodParametr() {
+        return methodParametr;
+    }
+
+    public void setMethodParametr(String methodParametr) {
+        this.methodParametr = methodParametr;
+    }
+
+    public String getLastMethod() {
+        return lastMethod;
+    }
+
+    public void setLastMethod(String lastMethod) {
+        this.lastMethod = lastMethod;
+    }
+
+    private void clearPositions() {
+        positions.clear();
+    }
+
 }
