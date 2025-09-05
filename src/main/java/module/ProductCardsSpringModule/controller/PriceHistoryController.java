@@ -1,13 +1,6 @@
 package module.ProductCardsSpringModule.controller;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import module.ProductCardsSpringModule.DTO.PriceHistoryDTO;
-import module.ProductCardsSpringModule.model.PriceHistory;
 import module.ProductCardsSpringModule.model.Product;
 import module.ProductCardsSpringModule.service.PriceHistoryService;
 import module.ProductCardsSpringModule.service.ProductService;
@@ -32,6 +25,7 @@ public class PriceHistoryController {
         this.priceHistoryService = priceHistoryService;
     }
 
+    // Возвращает список цен выбраного продукта
     @GetMapping("/pricehistory")
     public String priceHistory(
             Model model,
@@ -40,10 +34,13 @@ public class PriceHistoryController {
     ) {
         PriceHistoryDTO priceHistory = priceHistoryService.getPriceHistoryDTOById(product.getId());
 
+        // Продукт
         model.addAttribute("product", product);
+        // Передаёт адрес  для формы в шаблон(фрагмент возвращение на предыдущую страницу)
         model.addAttribute("returnUrl", returnUrl);
-
+        // Список цен на продукт
         model.addAttribute("prices", priceHistory.getPrices());
+        // Список дат
         model.addAttribute("dates", priceHistory.getDates());
         return "pricehistory";
     }
