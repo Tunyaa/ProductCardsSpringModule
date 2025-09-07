@@ -70,6 +70,8 @@ public class ExecuteOrderController {
         model.addAttribute("searchAction", "/execute/execute_order");
         // Сумма заказа
         model.addAttribute("purchaseAmount", executeOrderService.purchaseAmount());
+        // Суммы заказа по потребителям
+        model.addAttribute("purchaseAmounts", executeOrderService.purchaseAmountByConsumers());
 
         return "execute_order";
     }

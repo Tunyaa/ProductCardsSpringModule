@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import module.ProductCardsSpringModule.DTO.PositionDTO;
+import module.ProductCardsSpringModule.DTO.PurchaseAmountByConsumersDTO;
 import module.ProductCardsSpringModule.model.Order;
 import module.ProductCardsSpringModule.model.Position;
 import module.ProductCardsSpringModule.repository.OrderRepository;
@@ -211,6 +212,23 @@ public class ExecuteOrderService {
     private void setLastRequest(String methodParametr, String lastMethod) {
         this.lastMethod = lastMethod;
         this.methodParametr = methodParametr;
+    }
+
+    // Возвращает суммы заказа по потребителям
+    public List<PurchaseAmountByConsumersDTO> purchaseAmountByConsumers() {
+
+        List<PurchaseAmountByConsumersDTO> purchaseAmounts = new ArrayList<>();
+        List<Object[]> list = positionRepository.findSumPurchaseAmountForCousumersByOrderId(currentOrderId);
+        for (Object[] objects : list) {
+            if ((BigDecimal) objects[1] != null) {
+                purchaseAmounts.add(
+                        new PurchaseAmountByConsumersDTO(
+                                (String) objects[0],
+                                (BigDecimal) objects[1]
+                        ));
+            }
+        }
+        return purchaseAmounts;
     }
 
     // Возвращает сумму заказа

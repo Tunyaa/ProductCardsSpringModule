@@ -24,22 +24,29 @@
                 <button type="submit" class="search-btn">поиск</button>
             </form>
         </div>
+        <div class="amount">
+            <span th:text="'Сумма заказа: ' + (${purchaseAmount} != null ? ${purchaseAmount} : '0')"></span><span class="rubSymbl" th:text=" ' ₽'"></span>
+            
+            <div th:each=" purchaseAmount : ${purchaseAmounts}">
+                <span class="class" th:text="${purchaseAmount.consumer + ' - ' + purchaseAmount.amount}"></span>
+                <span class="rubSymbl" th:text="₽"></span>
+            </div>
 
-        <div th:text="'Сумма заказа: ' + (${purchaseAmount} != null ? ${purchaseAmount} : '0')"></div>
+        </div>
 
         <div class="positions-container">
 
             <div class="position-card" th:style="${position.purchased} ? 'background-color: #CCFFCC;' : 'background-color: white'"  th:each="position : ${positions}">
 
                 <div class="position-content">
-                    
+
                     <div class="position-image-container">
                         <img th:src="@{${position.product.img}}" class="position-image" 
                              th:alt="${position.product.name}" 
                              onerror="this.style.display='none'">
                     </div>
 
-                    
+
                     <div class="position-info">
                         <a th:href="@{/pricehistory(id=${position.product.id}, name=${position.product.name}, img=${position.product.img}, returnUrl=${returnUrl})}">
                             <div class="product-name" 

@@ -33,4 +33,10 @@ public interface PositionRepository extends JpaRepository<Position, UUID> {
             nativeQuery = true)
     BigDecimal findSumPurchaseAmountByOrderId(@Param("orderId") Long orderId);
 
+    // 
+    @Query(value = "SELECT  consumer, SUM(purchase_amount) "
+            + "FROM positions WHERE order_id = :orderId GROUP BY consumer;",
+            nativeQuery = true)
+    List<Object[]> findSumPurchaseAmountForCousumersByOrderId(@Param("orderId") Long orderId);
+
 }
