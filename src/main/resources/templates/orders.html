@@ -20,9 +20,9 @@
 
             .product-card {
                 background-color: #ddd;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                padding: 10px;
+                border: 1px solid #666;
+                border-radius: 16px;
+                padding: 6px;
                 text-align: center;
                 transition: transform 0.2s;
             }
@@ -39,12 +39,14 @@
             }
 
             .product-id {
+                margin: 2px;
                 font-weight: bold;
-                font-size: 14px;
+                font-size: 24px;
             }
 
             .product-date {
-                font-size: 12px;
+                margin:  5px;
+                font-size: 20px;
                 color: #666;
             }
 
@@ -65,7 +67,9 @@
             }
             .href_background{
                 background-color: white;
-                border-radius: 25px;
+                border: 1px solid #666;
+                border-radius: 11px;
+                margin-bottom: 2px;
             }
 
             .edit-btn {
@@ -195,20 +199,27 @@
         <div class="products-grid">
             <div class="product-card" th:each="order : ${orders}">
                 <a th:href="@{/execute/execute_order(id=${order.id})}" class="href_background">
-                    <div class="product-id">Заказ #<span th:text="${order.id}"></span></div>
-                    <div class="product-date" th:text="${#temporals.format(order.createdAt, 'dd.MM.yy HH:mm')}"></div>
+                    <div class="product-id">
 
-                    <span class="button-container">
-                        <form th:action="@{/order/setorder(id=${order.id})}" method="get" th:object="${order}">
-                            <input type="hidden" name="id" th:value="${order.id}">
-                            <button type="submit" class="edit-btn">Изм.</button>
-                        </form>
-                        <form th:action="@{/order/deleteorder}" method="post" th:object="${order}">
-                            <input type="hidden" name="id" th:value="${order.id}">
-                            <button type="submit" class="delete-btn">Удл.</button>
-                        </form>
-                    </span>
+                        <span th:text="${'Заказ #' + order.id}"></span>
+
+                    </div>
+
+                    <div class="product-date" th:text="${'от ' + #temporals.format(order.createdAt, 'dd.MM.yy')}"></div>
                 </a>
+                <span class="button-container">
+                    <form th:action="@{/order/setorder(id=${order.id})}" method="get" th:object="${order}">
+                        <input type="hidden" name="id" th:value="${order.id}">
+                        <button type="submit" class="edit-btn">Изменить</button>
+                    </form>
+                    <!-- Удаление заказа
+                   <form th:action="@{/order/deleteorder}" method="post" th:object="${order}">
+                       <input type="hidden" name="id" th:value="${order.id}">
+                       <button type="submit" class="delete-btn">Удл.</button>
+                   </form>
+                    -->
+                </span>
+
             </div>
         </div>
 

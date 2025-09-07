@@ -54,7 +54,11 @@
                             <button type="submit" class="btn btn-primary">Подтвердить заказ</button>
                         </form>
                         <form th:action="@{/order/clear}" method="post" style="display: inline;">
-                            <button type="submit" class="btn btn-danger btn-sm">Очистить список</button>
+                            <button type="submit" class="btn btn-danger btn-sm">Очистить</button>
+                        </form>                        
+                        <form th:action="@{/order/deleteorder}" method="post" >                             
+                            <input type="hidden" name="orderId" th:value="${orderId}">
+                            <button type="submit" class="btn btn-danger btn-sm">Удалить заказ</button>
                         </form>
                     </div>
                 </div>
