@@ -55,7 +55,6 @@ public class OrderController {
         model.addAttribute("categories", categories);
         // id заказа для формы удаления заказа
         model.addAttribute("orderId", orderId);
-        
 
         // Если строка передана, выполнится поиск по категории
         if (category != null) {
@@ -130,10 +129,14 @@ public class OrderController {
 
     // Удаляет заказ из БД
     @PostMapping("/deleteorder")
-    public String deleteOrder(@RequestParam Long orderId) {
-        System.out.println(" ID del - " + orderId);
-        orderService.deleteOrderByID(orderId);
-        return "redirect:/order/showorders";
+    public String deleteOrder(@RequestParam(required = false) Long orderId) {
+        if (orderId != null) {
+            orderService.deleteOrderByID(orderId);
+            return "redirect:/order/showorders";
+        }
+        orderService.clearPositions();
+        return "redirect:/order/create";
+
     }
 
 }

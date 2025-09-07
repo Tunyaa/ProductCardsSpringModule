@@ -2,6 +2,7 @@ package module.ProductCardsSpringModule.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import module.ProductCardsSpringModule.DTO.PositionDTO;
@@ -61,6 +62,7 @@ public class OrderService {
     // Возвращает список заказов
     public List<Order> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
+        Collections.reverse(orders);
         return orders;
     }
 
