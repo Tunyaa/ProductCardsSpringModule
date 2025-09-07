@@ -107,16 +107,13 @@ public class OrderService {
         return positionsDTO;
     }
 
-    // Принимает из формы аргументы, вычисляет недостающее поле, сохраняет.
     public void updateExecutePosition(PositionDTO position) {
-        // Поле getPurchasedQuantity обязательное поле, проверяется в шаблоне.
-        // Принимает buyingPrice, вычисляет purchaseAmount
+
         if (position.getPurchaseAmount() == null && position.getBuyingPrice() != null) {
             BigDecimal purchaseAmount = position.getBuyingPrice()
                     .multiply(BigDecimal.valueOf(position.getPurchasedQuantity()));
             position.setPurchaseAmount(purchaseAmount);
-        }// Принимает purchaseAmount, вычисляет buyingPrice
-        else if (position.getBuyingPrice() == null && position.getPurchaseAmount() != null) {
+        } else if (position.getBuyingPrice() == null && position.getPurchaseAmount() != null) {
             BigDecimal valueOf = BigDecimal.valueOf(position.getPurchasedQuantity());
             BigDecimal buyingPrice = position.getPurchaseAmount()
                     .divide(valueOf, 2, RoundingMode.HALF_UP);
@@ -126,8 +123,8 @@ public class OrderService {
         updatePosition(position);
     }
 
-    // Обновляет позицию в БД. Загружает позицию из БД, меняет поля, сохраняет в БД.
-    // Позиция меняет статус на "куплено", сохраняет цену, количество и сумму
+    // Обновляет позицию. 
+    // Позиция меняет статус на "куплено" и сохраняет цену, количество и сумму
     public void updatePosition(PositionDTO positionDTO) {
 
         Position position = positionRepository.findById(positionDTO.getId()).orElseThrow();
