@@ -26,7 +26,7 @@
         </div>
         <div class="amount">
             <span th:text="'Сумма заказа: ' + (${purchaseAmount} != null ? ${purchaseAmount} : '0')"></span><span class="rubSymbl" th:text=" ' ₽'"></span>
-            
+
             <div th:each=" purchaseAmount : ${purchaseAmounts}">
                 <span class="class" th:text="${purchaseAmount.consumer + ' - ' + purchaseAmount.amount}"></span>
                 <span class="rubSymbl" th:text="₽"></span>
@@ -109,7 +109,7 @@
             </div>
         </div>
 
+        
 
-        <div th:insert="~{fragments/footer-fragment :: footer-fragment}"></div>
     </body>
 </html>
