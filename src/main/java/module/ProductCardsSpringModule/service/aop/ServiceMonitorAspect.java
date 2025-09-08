@@ -11,6 +11,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -20,6 +21,11 @@ import org.springframework.util.StopWatch;
  */
 @Aspect // Класс перехватвающий методы
 @Component
+@ConditionalOnProperty(
+    value = "aop.enabled", 
+    havingValue = "true", 
+    matchIfMissing = true // если свойство не указано - включать
+)
 public class ServiceMonitorAspect {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
