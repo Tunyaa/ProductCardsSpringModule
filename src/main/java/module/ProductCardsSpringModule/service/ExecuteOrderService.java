@@ -11,6 +11,7 @@ import module.ProductCardsSpringModule.model.Order;
 import module.ProductCardsSpringModule.model.Position;
 import module.ProductCardsSpringModule.repository.OrderRepository;
 import module.ProductCardsSpringModule.repository.PositionRepository;
+import module.ProductCardsSpringModule.service.aop.Monitor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -73,6 +74,7 @@ public class ExecuteOrderService {
     }
 
     // Принимает из формы аргументы, вычисляет недостающее поле, сохраняет.
+    @Monitor
     public void updateExecutePosition(PositionDTO position) {
         // Поле getPurchasedQuantity обязательное поле, проверяется в шаблоне.
         // Принимает buyingPrice, вычисляет purchaseAmount
@@ -93,7 +95,7 @@ public class ExecuteOrderService {
 
     // Обновляет позицию в БД. Загружает позицию из БД, меняет поля, сохраняет в БД.
     // Позиция меняет статус на "куплено", сохраняет цену, количество и сумму
-    public void updatePosition(PositionDTO positionDTO) {
+    private void updatePosition(PositionDTO positionDTO) {
 
         Position position = positionRepository.findById(positionDTO.getId()).orElseThrow();
         position.getProduct().setCurrentPrice(positionDTO.getBuyingPrice());

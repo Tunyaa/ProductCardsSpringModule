@@ -10,6 +10,7 @@ import module.ProductCardsSpringModule.model.Order;
 import module.ProductCardsSpringModule.model.Position;
 import module.ProductCardsSpringModule.repository.OrderRepository;
 import module.ProductCardsSpringModule.repository.ProductRepository;
+import module.ProductCardsSpringModule.service.aop.Monitor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,6 +73,7 @@ public class OrderService {
     }
 
     // Добавляет позицию в список
+    @Monitor
     public void addPosition(PositionDTO position) {
         // Загружает продукт из БД по id. Присваивает продукт позиции
         position.setProduct(productRepository.findById(position.getProductId()).orElseThrow());
