@@ -51,23 +51,6 @@ mvn spring-boot:run
 Пользователь	user	user123	Базовые операции
 Менеджер	manager	manager123	Управление заказами
 
-🗂️ Структура проекта
-text
-src/
-├── main/
-│   ├── java/
-│   │   └── module/ProductCardsSpringModule/
-│   │       ├── config/          # Конфигурации Spring
-│   │       ├── controller/      # REST и MVC контроллеры
-│   │       ├── service/         # Бизнес-логика
-│   │       ├── repository/      # Data JPA репозитории
-│   │       ├── model/           # Сущности БД
-│   │       ├── aspect/          # AOP аспекты
-│   │       └── dto/             # Data Transfer Objects
-│   └── resources/
-│       ├── static/              # CSS, JS, изображения
-│       └── templates/           # Thymeleaf шаблоны
-
 
 🌟 Ключевые возможности
 🛍️ Управление товарами
