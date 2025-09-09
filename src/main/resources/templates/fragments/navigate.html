@@ -17,30 +17,34 @@
                 <!-- Десктопное меню -->
                 <div class="nav-desktop">
                     <ul>
-                        <li><a href="/">Главная</a></li>
-                        <li><a href="/products">Все Продукты</a></li>
-                        <li><a href="/addproduct">Добавить продукт</a></li>
-                        <li><a href="/order/create">Создать заказ</a></li>
-                        <li><a href="/order/showorders">Все заказы</a></li>
-                    </ul>
-
-                </div>
-
-                <!-- Мобильное меню -->
-                <div class="nav-mobile" id="mobileMenu">
-                    <ul>
-                        <li><a href="/">Главная</a></li>
                         <li><a href="/products">Все продукты</a></li>
                         <li><a href="/addproduct">Добавить продукт</a></li>
                         <li><a href="/order/create">Создать заказ</a></li>
                         <li><a href="/order/showorders">Все заказы</a></li>
                         <li><a href="/execute/current_execute_order">Текущий заказ</a></li>
                         <li>    
+
                             <div>
-                                <form class="login-form" th:action="@{/login}" method="post">
-                                    <button type="submit" class="login-btn">Войти</button>
+                                <form class="logout-form" th:action="@{/logout}" method="post">
+                                    <button type="submit" class="logout-btn">Выйти</button>
                                 </form>
                             </div>
+                        </li>
+                    </ul>
+
+
+                </div>
+
+                <!-- Мобильное меню -->
+                <div class="nav-mobile" id="mobileMenu">
+                    <ul>
+                        <li><a href="/products">Все продукты</a></li>
+                        <li><a href="/addproduct">Добавить продукт</a></li>
+                        <li><a href="/order/create">Создать заказ</a></li>
+                        <li><a href="/order/showorders">Все заказы</a></li>
+                        <li><a href="/execute/current_execute_order">Текущий заказ</a></li>
+                        <li>    
+
                             <div>
                                 <form class="logout-form" th:action="@{/logout}" method="post">
                                     <button type="submit" class="logout-btn">Выйти</button>
