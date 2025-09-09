@@ -8,22 +8,25 @@
         <link rel="stylesheet" th:href="@{/css/product_search_fragment.css}">
     </head>
     <body>
-        <div th:insert="~{fragments/navigate :: navigate}"></div>
-        <div th:replace="~{fragments/product_search_fragment :: product_search_fragment}"></div>
-
         <div>
-            <form th:action="@{${searchAction}}" method="get" class="search-form">
+            <div th:insert="~{fragments/navigate :: navigate}"></div>
+            <div th:replace="~{fragments/product_search_fragment :: product_search_fragment}"></div>
+
+            <div class="search-container">
+                <form th:action="@{${searchAction}}" method="get" class="search-form">
 
 
-                <select class="form-control-mobile" id="purchaseStatus" name="purchaseStatus">
-                    <option value="all">Все</option>
-                    <option value="purchased">Куплено</option>
-                    <option value="notPurchased">Не куплено</option>
-                </select>
+                    <select class="form-control-mobile" id="purchaseStatus" name="purchaseStatus">
+                        <option value="all">Все</option>
+                        <option value="purchased">Куплено</option>
+                        <option value="notPurchased">Не куплено</option>
+                    </select>
 
-                <button type="submit" class="search-btn">поиск</button>
-            </form>
+                    <button type="submit" class="search-btn">поиск</button>
+                </form>
+            </div>
         </div>
+
         <div class="amount">
             <span th:text="'Сумма заказа: ' + (${purchaseAmount} != null ? ${purchaseAmount} : '0')"></span><span class="rubSymbl" th:text=" ' ₽'"></span>
 
@@ -36,7 +39,7 @@
 
         <div class="positions-container">
 
-            <div class="position-card" th:style="${position.purchased} ? 'background-color: #CCFFCC;' : 'background-color: white'"  th:each="position : ${positions}">
+            <div class="position-card" th:style="${position.purchased} ? 'background-color: #dfffdf;' : 'background-color: #cacacae'"  th:each="position : ${positions}">
 
                 <div class="position-content">
 
@@ -101,7 +104,7 @@
 
                             <form th:action="@{/execute/switch_checkbox}" method="post" th:object="${position}">
                                 <input type="hidden" name="id" th:value="${position.id}">
-                                <button type="submit" class="clear">🗙</button>
+                                <button type="submit" class="clear">x</button>
                             </form>
                         </div>        
                     </div>
@@ -109,7 +112,7 @@
             </div>
         </div>
 
-        
+
 
     </body>
 </html>
