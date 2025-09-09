@@ -8,13 +8,13 @@
     </head>
     <body>
         <nav th:fragment="productlist_fragment">
-            
+
 
             <!-- Мобильная версия (карточки) -->
             <div class="mobile-products-container">
                 <div class="mobile-product-card" th:each="product : ${products}">
 
-                    <a th:href="@{/pricehistory(id=${product.id}, name=${product.name}, img=${product.img}, returnUrl=${returnUrl})}">
+                    <a th:href="@{/pricehistory(id=${product.id}, returnUrl=${returnUrl})}">
                         <div class="mobile-product-img-container">
 
 

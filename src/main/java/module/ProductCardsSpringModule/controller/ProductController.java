@@ -132,7 +132,7 @@ public class ProductController {
         productService.updateProduct(product, imageFile);
         model.addAttribute("message", "Продукт изменен.");
 
-        return "setproduct";
+        return "redirect:/order/create";
     }
 
     // Удаляет продукт по id

@@ -22,13 +22,12 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-    
-     
     @Bean
     public DefaultSecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable())// УБРАТЬ!!!!!!
                 .authorizeHttpRequests(authz -> authz
-//                .requestMatchers("/**").permitAll()
+                //                .requestMatchers("/**").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 )
@@ -38,11 +37,11 @@ public class SecurityConfig {
                 .permitAll()
                 )
                 .logout(logout -> logout
-            .logoutUrl("/logout") // URL для обработки logout
-            .logoutSuccessUrl("/login?logout=true") // куда перенаправлять после выхода
-            .invalidateHttpSession(true) // очистить сессию
-            .deleteCookies("JSESSIONID") // удалить cookies
-            .permitAll()
+                .logoutUrl("/logout") // URL для обработки logout
+                .logoutSuccessUrl("/login?logout=true") // куда перенаправлять после выхода
+                .invalidateHttpSession(true) // очистить сессию
+                .deleteCookies("JSESSIONID") // удалить cookies
+                .permitAll()
                 )
                 .userDetailsService(userDetailsService);
 

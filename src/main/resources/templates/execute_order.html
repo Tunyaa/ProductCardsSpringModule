@@ -39,7 +39,9 @@
 
         <div class="positions-container">
 
-            <div class="position-card" th:style="${position.purchased} ? 'background-color: #dfffdf;' : 'background-color: #cacacae'"  th:each="position : ${positions}">
+            <div class="position-card" 
+                 th:style="${position.purchased} ? 'background-color: #dfffdf;' : 'background-color: #cacacae'"  
+                 th:each="position : ${positions}">
 
                 <div class="position-content">
 

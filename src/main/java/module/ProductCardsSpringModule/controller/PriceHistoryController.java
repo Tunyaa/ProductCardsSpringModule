@@ -33,7 +33,7 @@ public class PriceHistoryController {
             @RequestParam(name = "returnUrl", required = false) String returnUrl
     ) {
         PriceHistoryDTO priceHistory = priceHistoryService.getPriceHistoryDTOById(product.getId());
-
+        product = productService.findProductById(product.getId());
         // Продукт
         model.addAttribute("product", product);
         // Передаёт адрес  для формы в шаблон(фрагмент возвращение на предыдущую страницу)
