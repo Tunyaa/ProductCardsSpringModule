@@ -2,12 +2,14 @@ package module.ProductCardsSpringModule;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication
+//@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class ProductCardsSpringModuleApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ProductCardsSpringModuleApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ProductCardsSpringModuleApplication.class, args);
+    }
 
 }

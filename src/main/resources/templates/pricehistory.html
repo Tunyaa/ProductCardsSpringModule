@@ -26,59 +26,84 @@
     <body>
 
         <div th:insert="~{fragments/navigate :: navigate}"></div>
-        
+
         <div>
             <a class="menu-toggle" th:href="@{${returnUrl}}">Назад</a>
         </div>
+
         <div>
             <img th:src="@{${product.img}}" style="max-height: 200px"/>
-            <h1>История цен: <span th:text="${product.name}"></span></h1>
+            <h1><span th:text="${product.name + ' '+ product.variety + ' ' + product.currentPrice + 'р/' +product.packing}"></span></h1>
+
+            <span th:text="${product.country}"></span>
+            <div>
+                <span th:text="${product.description}"></span>
+            </div>
+            <div>
+                <span th:text="${product.whereBuy}"></span>
+            </div>
+
         </div>
 
 
 
 
-        <div class="chart-container">
-            <canvas id="priceChart"></canvas>
+        <div class="mobile-product-actions">
+            <form th:action="@{/setproduct(returnUrl=${returnUrl})}" method="get" th:if="${product.id != null}">
+                <input type="hidden" name="id" th:value="${product.id}">
+                <button type="submit" class="btn btn-sm btn-outline-primary btn-edit">
+                    ✎ Редакт.
+                </button>
+            </form>
         </div>
 
-        <script th:inline="javascript">
-            /* Получаем данные из Thymeleaf */
-            const prices = /*[[${prices}]]*/ [];
-            const dates = /*[[${dates}]]*/ [];
 
-            /* Создаем график */
-            const ctx = document.getElementById('priceChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: dates,
-                    datasets: [{
-                            label: 'Цена',
-                            data: prices,
-                            borderColor: 'rgb(75, 192, 192)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderWidth: 2,
-                            tension: 0.1,
-                            fill: true
-                        }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Динамика изменения цены'
-                        },
+    </div>
+
+
+
+
+    <div class="chart-container">
+        <canvas id="priceChart"></canvas>
+    </div>
+
+    <script th:inline="javascript">
+        /* Получаем данные из Thymeleaf */
+        const prices = /*[[${prices}]]*/ [];
+        const dates = /*[[${dates}]]*/ [];
+
+        /* Создаем график */
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                        label: 'Цена',
+                        data: prices,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2,
+                        tension: 0.1,
+                        fill: true
+                    }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Динамика изменения цены'
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: false
-                        }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false
                     }
                 }
-            });
-        </script>
+            }
+        });
+    </script>
 
-    </body>
+</body>
 </html>

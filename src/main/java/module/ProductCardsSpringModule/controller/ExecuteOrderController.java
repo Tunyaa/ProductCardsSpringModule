@@ -1,14 +1,11 @@
 package module.ProductCardsSpringModule.controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import module.ProductCardsSpringModule.DTO.PositionDTO;
-import module.ProductCardsSpringModule.model.Order;
-import module.ProductCardsSpringModule.model.Position;
-import module.ProductCardsSpringModule.model.Product;
 import module.ProductCardsSpringModule.model.ProductCategories;
-import module.ProductCardsSpringModule.service.OrderService;
+import module.ProductCardsSpringModule.service.ExecuteOrderService;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,87 +20,95 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @RequestMapping("/execute")
+@Scope("session")
 public class ExecuteOrderController {
 
-    private final OrderService orderService;
+    private final ExecuteOrderService executeOrderService;
 
-    public ExecuteOrderController(OrderService orderService) {
-        this.orderService = orderService;
+    public ExecuteOrderController(ExecuteOrderService executeOrderService) {
+        this.executeOrderService = executeOrderService;
     }
 
+    // Возвращает список позиций из выбранного заказа.
     @GetMapping("/execute_order")
     public String executeOrderByOrderId(
             Model model,
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) String productName,
-            @RequestParam(required = false) String purchaseStatus
+            @RequestParam(required = false) Long id, // ID заказа
+            @RequestParam(required = false) String category,// Фильтры позиций: по категории товара
+            @RequestParam(required = false) String productName,//  по строке
+            @RequestParam(required = false) String purchaseStatus//  по куплен\некуплен
     ) {
 
-        // Если строка передана, выполнится поиск по категории
+        List<PositionDTO> positions;
+
+        // Если строка передана, выполнится поиск позиций по категории
         if (category != null) {
-            List<PositionDTO> positions = orderService.findPositionsByProductCategory(category);
-            model.addAttribute("positions", positions);
-        } // Если строка передана, выполнится поиск по имени
+            positions = executeOrderService.findPositionsByProductCategory(category);
+        } // Если строка передана, выполнится поиск позиций по имени
         else if (productName != null) {
-            System.out.println("prodName - " + productName);
-            List<PositionDTO> positions = orderService.findPositionsByProductName(productName);
-            model.addAttribute("positions", positions);
-        } else if (purchaseStatus != null) {
-            // Передаёт весь список продуктов(куплены\не куплены\все) в шаблон
-            List<PositionDTO> positions = orderService.findPositionsByPurchaseStatus(purchaseStatus);
-            model.addAttribute("positions", positions);
+            positions = executeOrderService.findPositionsByProductName(productName);
+        } // Если строка передана, выполнится поиск позиций по статусу покупки
+        else if (purchaseStatus != null) {
+            positions = executeOrderService.findPositionsByPurchaseStatus(purchaseStatus);
+        } // Если id заказа передан, будет возвращен список позиций этого заказа
+        else if (id != null) {
+            positions = executeOrderService.getExecutePositionsByOrderId(id);
+        } // Иначе будет выполнен способ поиска, который выполнялся последним
+        else {
+            positions = executeOrderService.getPositionsByLastRequest();
         }
-
-        if (id != null) {
-            orderService.getPositionsByOrderId(id);
-            List<PositionDTO> positions = orderService.getAllPositions();
-            model.addAttribute("positions", positions);
-        } else {
-            List<PositionDTO> positions = orderService.getAllPositions();
-            model.addAttribute("positions", positions);
-        }
-
-        // Передаёт в шаблон -> в форму -> в поле выбора категории список категорий
+        // Передаёт в модель список позиций
+        model.addAttribute("positions", positions);
+        // Передаёт в модель -> в форму -> в поле выбора категории список категорий
         List<ProductCategories> categories = Arrays.asList(ProductCategories.values());
         model.addAttribute("categories", categories);
         // Передаёт в модель id текущего заказа
-        model.addAttribute("orderId", orderService.getCurrentOrderId());
-        // Передаёт адрес страницы  с которой бутет выполнен переход по ссылке
+        model.addAttribute("orderId", executeOrderService.getCurrentOrderId());
+        // Передаёт адрес  для формы в шаблон(фрагмент возвращение на предыдущую страницу)
         model.addAttribute("returnUrl", "/execute/execute_order");
-        // Передаёт адрес запроса для формы в шаблон
+        // Передаёт адрес  для формы в шаблон(фрагмент поиска)
         model.addAttribute("searchAction", "/execute/execute_order");
+        // Сумма заказа
+        model.addAttribute("purchaseAmount", executeOrderService.purchaseAmount());
+        // Суммы заказа по потребителям
+        model.addAttribute("purchaseAmounts", executeOrderService.purchaseAmountByConsumers());
 
         return "execute_order";
     }
 
+    // Обновляет позицию(статус, цена, количество, сумма)
     @PostMapping("/update")
     public String updateExecutePosition(
             Model model,
             @ModelAttribute PositionDTO position,
             @RequestParam(required = false) Long orderId
     ) {
-
-        orderService.updateExecutePosition(position);
-
-        orderService.getPositionsByOrderId(orderId);
-        return "redirect:/execute/execute_order?id=" + orderId;
+        // Обновляет позицию
+        executeOrderService.updateExecutePosition(position);
+        // Загружает список с обновленными полями
+        executeOrderService.getExecutePositionsByOrderId(orderId);
+        return "redirect:/execute/execute_order";
+        // Возвращение без id, чтобы выполнилось условие else в /execute_order
+        //        return "redirect:/execute/execute_order?id=" + orderId;
     }
 
+    // Отменяет обновленную позицию
+    // Статус, цена, количество, сумма возвращаются в исходное состояние
     @PostMapping("/switch_checkbox")
     public String switchCheckbox(@ModelAttribute PositionDTO position) {
-        System.out.println(position.getId() + " - ID position");
-        orderService.clearExicutePositionByID(position.getId());
-        return "redirect:/execute/execute_order?id=" + orderService.getCurrentOrderId();
+
+        executeOrderService.clearExicutePositionByID(position.getId());
+        return "redirect:/execute/execute_order?id=" + executeOrderService.getCurrentOrderId();
     }
 
+    // Возарвщает список позиций последнего выбранного заказа
     @GetMapping("/current_execute_order")
     public String currentExecuteOrder() {
-        System.out.println(orderService.getCurrentOrderId() == null);
-        if (orderService.getCurrentOrderId() == null) {
+
+        if (executeOrderService.getCurrentOrderId() == null) {
             return "redirect:/order/showorders";
         }
-        return "redirect:/execute/execute_order?id=" + orderService.getCurrentOrderId();
+        return "redirect:/execute/execute_order?id=" + executeOrderService.getCurrentOrderId();
     }
 
 }

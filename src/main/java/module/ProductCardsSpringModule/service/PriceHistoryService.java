@@ -26,13 +26,18 @@ public class PriceHistoryService {
         this.priceHistoryRepository = priceHistoryRepository;
     }
 
+    // Преобразовывает список priseHistory в priseHistoryDTO
     public PriceHistoryDTO getPriceHistoryDTOById(Long id) {
 
-        List<PriceHistory> priceHistory = this.getPriceHistoryByPriductId(id);
+        List<PriceHistory> priceHistory = getPriceHistoryByPriductId(id);
         PriceHistoryDTO priceHistoryDTO = new PriceHistoryDTO();
-        priceHistoryDTO.setPrices(priceHistory.stream().map(PriceHistory::getPrice).collect(Collectors.toList()));
+        priceHistoryDTO.setPrices(priceHistory.stream()
+                .map(PriceHistory::getPrice).
+                collect(Collectors.toList()));
 
-        List<LocalDateTime> priceHistorydates = priceHistory.stream().map(PriceHistory::getChangeDate).collect(Collectors.toList());
+        List<LocalDateTime> priceHistorydates = priceHistory.stream()
+                .map(PriceHistory::getChangeDate)
+                .collect(Collectors.toList());
         List<String> dates = new ArrayList<>();
         for (LocalDateTime date : priceHistorydates) {
             String format = date.format(DateTimeFormatter.ofPattern("dd.mm.yyyy"));
@@ -42,14 +47,11 @@ public class PriceHistoryService {
         priceHistoryDTO.setDates(dates);
 
         return priceHistoryDTO;
-
     }
 
 //     Возвращает список истории цен на продукт по его id
     public List<PriceHistory> getPriceHistoryByPriductId(Long id) {
-
         List<PriceHistory> priceHistory = priceHistoryRepository.findAllByProductId(id);
-
         return priceHistory;
     }
 

@@ -44,7 +44,7 @@
                             </div>
 
                             <select class="form-control-grid consumer-select-grid" th:field="*{consumer}">
-                                <option value="">Получатель</option>
+                                
                                 <option th:each="consumer : ${consumers}" 
                                         th:value="${consumer}" 
                                         th:text="${consumer}">

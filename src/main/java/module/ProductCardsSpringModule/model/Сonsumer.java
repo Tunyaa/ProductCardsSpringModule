@@ -7,5 +7,5 @@ package module.ProductCardsSpringModule.model;
 
 // Заказчики продуктов
 public enum Сonsumer {
-    КАФЕ, КЛУБ, КОНДИТЕРСКАЯ;
+    Гастротерра, Клуб, Кондитерская;
 }

@@ -1,5 +1,6 @@
 package module.ProductCardsSpringModule.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import module.ProductCardsSpringModule.model.Position;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PositionRepository extends JpaRepository<Position, UUID> {
 
+    // Возвращает список позиций заказа, продукт которой соответствует переданной категории
     @Query(value = "SELECT positions.id, product_id, quantity, consumer, buying_price, purchased_quantity, purchase_amount, purchased, comment  FROM positions JOIN("
             + "SELECT product_id.id, product_id.product_id FROM product_id JOIN ("
             + "SELECT id FROM product WHERE category = :category) AS a "
@@ -25,5 +27,16 @@ public interface PositionRepository extends JpaRepository<Position, UUID> {
             @Param("orderId") Long orderId,
             @Param("category") String category
     );
+
+    // Возвращает сумму заказа
+    @Query(value = "SELECT SUM(purchase_amount) FROM positions WHERE order_id = :orderId ;",
+            nativeQuery = true)
+    BigDecimal findSumPurchaseAmountByOrderId(@Param("orderId") Long orderId);
+
+    // 
+    @Query(value = "SELECT  consumer, SUM(purchase_amount) "
+            + "FROM positions WHERE order_id = :orderId GROUP BY consumer;",
+            nativeQuery = true)
+    List<Object[]> findSumPurchaseAmountForCousumersByOrderId(@Param("orderId") Long orderId);
 
 }

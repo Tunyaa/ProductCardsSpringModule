@@ -71,7 +71,10 @@ public class ProductService {
         } catch (IOException ex) {
             System.getLogger(ProductService.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (Exception ex) {
-            System.getLogger(ProductService.class.getName()).log(System.Logger.Level.ERROR, "ЭТОТ ПРОДУКТ НЕ МОЖЕТ БЫТЬ УДАЛЕН, ТАК КАК ПОЗИЦИЯ С ЭТИМ ПРОДУКТОМ УЖЕ ЕСТЬ В ЗАКАЗЕ.");
+            System.getLogger(ProductService.class.getName())
+                    .log(System.Logger.Level.ERROR,
+                            "ЭТОТ ПРОДУКТ НЕ МОЖЕТ БЫТЬ УДАЛЕН, ТАК "
+                            + "КАК ПОЗИЦИЯ С ЭТИМ ПРОДУКТОМ УЖЕ ЕСТЬ В ЗАКАЗЕ.");
         }
 
     }
@@ -88,6 +91,7 @@ public class ProductService {
         return product;
     }
 
+    // Возвращает список продуктов по категории продкта
     public List<Product> findProductsByCategory(String category) {
         if (category.equals("allCategories")) {
             return getAllProducts();
@@ -97,6 +101,7 @@ public class ProductService {
         return findProductsByCategory;
     }
 
+    // Возвращает список продуктов по названию и сорту
     public List<Product> findProductByName(String productName) {
         List<Product> products = getAllProducts();
         ArrayList<Product> productsByName = new ArrayList<>();

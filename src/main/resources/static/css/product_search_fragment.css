@@ -1,6 +1,7 @@
 .search-container {
     display: flex;
-    gap: 15px;
+    margin-top: 5px;
+    gap: 1px;
     align-items: flex-end;
     flex-wrap: wrap;
 }

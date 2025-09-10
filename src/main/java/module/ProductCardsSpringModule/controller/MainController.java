@@ -14,8 +14,8 @@ public class MainController {
     @GetMapping("/")
     public String main(Model model) {
 
-        model.addAttribute("message", "Добро пожаловать!");
-        return "main";
+//        model.addAttribute("message", "Добро пожаловать!");
+        return "redirect:/order/create";
     }
 
 }

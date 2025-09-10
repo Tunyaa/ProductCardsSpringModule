@@ -260,7 +260,8 @@ body {
 }
 
 .btn-sm {
-    padding: 6px 10px;
+    font-weight: bold;
+    padding: 4px 8px;
     font-size: 13px;
 }
 

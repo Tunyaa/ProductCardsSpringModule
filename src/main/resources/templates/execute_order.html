@@ -8,36 +8,50 @@
         <link rel="stylesheet" th:href="@{/css/product_search_fragment.css}">
     </head>
     <body>
-        <div th:insert="~{fragments/navigate :: navigate}"></div>
-        <div th:replace="~{fragments/product_search_fragment :: product_search_fragment}"></div>
-
         <div>
-            <form th:action="@{${searchAction}}" method="get" class="search-form">
+            <div th:insert="~{fragments/navigate :: navigate}"></div>
+            <div th:replace="~{fragments/product_search_fragment :: product_search_fragment}"></div>
+
+            <div class="search-container">
+                <form th:action="@{${searchAction}}" method="get" class="search-form">
 
 
-                <select class="form-control-mobile" id="purchaseStatus" name="purchaseStatus">
-                    <option value="all">Все</option>
-                    <option value="purchased">Куплено</option>
-                    <option value="notPurchased">Не куплено</option>
-                </select>
+                    <select class="form-control-mobile" id="purchaseStatus" name="purchaseStatus">
+                        <option value="all">Все</option>
+                        <option value="purchased">Куплено</option>
+                        <option value="notPurchased">Не куплено</option>
+                    </select>
 
-                <button type="submit" class="search-btn">поиск</button>
-            </form>
+                    <button type="submit" class="search-btn">поиск</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="amount">
+            <span th:text="'Сумма заказа: ' + (${purchaseAmount} != null ? ${purchaseAmount} : '0')"></span><span class="rubSymbl" th:text=" ' ₽'"></span>
+
+            <div th:each=" purchaseAmount : ${purchaseAmounts}">
+                <span class="class" th:text="${purchaseAmount.consumer + ' - ' + purchaseAmount.amount}"></span>
+                <span class="rubSymbl" th:text="₽"></span>
+            </div>
+
         </div>
 
         <div class="positions-container">
 
-            <div class="position-card" th:each="position : ${positions}">
+            <div class="position-card" 
+                 th:style="${position.purchased} ? 'background-color: #dfffdf;' : 'background-color: #cacacae'"  
+                 th:each="position : ${positions}">
 
                 <div class="position-content">
-                    <!-- Картинка (25%) -->
+
                     <div class="position-image-container">
                         <img th:src="@{${position.product.img}}" class="position-image" 
                              th:alt="${position.product.name}" 
                              onerror="this.style.display='none'">
                     </div>
 
-                    <!-- Описание (25%) -->
+
                     <div class="position-info">
                         <a th:href="@{/pricehistory(id=${position.product.id}, name=${position.product.name}, img=${position.product.img}, returnUrl=${returnUrl})}">
                             <div class="product-name" 
@@ -57,15 +71,12 @@
                              th:text="${position.consumer}" 
                              th:if="${position.consumer != null}">
                         </div>
-
-
                     </div>
 
-                    <!-- Форма ввода (50%) -->
+
                     <div class="position-form">
 
-
-                        <form th:action="@{/execute/update(orderId=${orderId})}" method="post" th:object="${position}" class="data-form">
+                        <form th:action="@{/execute/update(orderId=${orderId})}" method="post" th:object="${position}">
                             <input type="hidden" name="id" th:value="${position.id}">
                             <input type="hidden" name="orderId" th:value="${orderId}">
 
@@ -87,41 +98,23 @@
                                     <input type="number" name="purchaseAmount" placeholder="Сумма"
                                            th:value="${position.purchaseAmount != null} ? ${position.purchaseAmount} : ''">
                                 </div>
-
-                                <span class="checkbox-container" th:text="${position.purchased} ? '✓' : '✗'"></span>
-
                             </div>
-
                             <button type="submit" class="save-btn">Сохранить</button>
                         </form>
 
                         <div class="clear-container">
-                            <!-- остальное содержимое формы -->
+
                             <form th:action="@{/execute/switch_checkbox}" method="post" th:object="${position}">
                                 <input type="hidden" name="id" th:value="${position.id}">
-                                <button type="submit" class="clear">Отменить</button>
+                                <button type="submit" class="clear">x</button>
                             </form>
-                        </div>
-
-                        <!-- Форма ввода (50%) 
-                        <form th:action="@{/execute/switch_checkbox}" method="post" class="checkbox-form">
-                            <input type="hidden" name="id" th:value="${position.id}"><input type="hidden" name="id" th:value="${position.id}">
-                            <div class="checkbox-container">
-                                 
-                                <input type="checkbox" th:checked="${position.purchased}" 
-                                       onchange="this.form.submit()">
-
-                            </div>
-                        </form>
-                        -->
-
+                        </div>        
                     </div>
-
                 </div>
             </div>
         </div>
 
 
-        <div th:insert="~{fragments/footer-fragment :: footer-fragment}"></div>
+
     </body>
 </html>
