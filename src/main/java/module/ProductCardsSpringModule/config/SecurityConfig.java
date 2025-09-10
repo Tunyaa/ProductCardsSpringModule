@@ -27,7 +27,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())// УБРАТЬ!!!!!!
                 .authorizeHttpRequests(authz -> authz
-                //                .requestMatchers("/**").permitAll()
+                //.requestMatchers("/**").permitAll()
+                //.requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/css/", "/js/", "/images/").permitAll() // разрешаем статику без авторизации
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 )
