@@ -2,16 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="initial-scale=1.0, width=device-width, height=device-height, user-scalable=no">
         <title>Авторизация</title>
         <link rel="stylesheet" th:href="@{/css/common.css}">
     </head>
     <body>
         <div class="login-container">
-            <h2>Вход в систему</h2>
+            <h2>Авторизация</h2>
 
             <div th:if="${param.error}" class="error">
-                Неверное имя пользователя или пароль
+                Неверный логин или пароль
             </div>
 
             <div th:if="${param.logout}" class="success">
@@ -20,19 +20,16 @@
 
             <form th:action="@{/login}" method="post">
                 <div>
-                    <label>Имя пользователя:</label>
-                    <input type="text" name="username" placeholder="Введите ваш логин" required>
+                    <input type="text" name="username" placeholder="Введите логин"  autocomplete="off" required>
                 </div>
 
                 <div>
-                    <label>Пароль:</label>
-                    <input type="password" name="password" placeholder="Введите ваш пароль" required>
+                    <input type="password" name="password" placeholder="Введите пароль"  autocomplete="off" required>
                 </div>
 
                 <button type="submit">Войти</button>
             </form>
-
-            
+			
         </div>
     </body>
 </html>
