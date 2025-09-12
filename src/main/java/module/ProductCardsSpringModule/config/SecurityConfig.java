@@ -25,11 +25,11 @@ public class SecurityConfig {
     @Bean
     public DefaultSecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())// УБРАТЬ!!!!!!
+//                .csrf(csrf -> csrf.disable())// УБРАТЬ!!!!!!
                 .authorizeHttpRequests(authz -> authz
                 //.requestMatchers("/**").permitAll()
                 //.requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/css/", "/js/", "/images/").permitAll() // разрешаем статику без авторизации
+                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // разрешаем статику без авторизации
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 )
